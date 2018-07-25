@@ -33,8 +33,6 @@ body {
   color: var(--medgrey);
 }
 
-
-
 .app {
   position: relative;
   max-width: 940px;
@@ -472,6 +470,7 @@ h1.main-header {
   height: 12px;
   border-radius: 6px;
   flex-basis: 100%;
+  padding-bottom: 15px;
 }
 
 .sound-progress-tab {
@@ -487,8 +486,6 @@ h1.main-header {
   cursor: pointer;
   background: var(--lightgrey);
 }
-
-
 
 .settings-work .sound-progress-tab:hover:not(.sound-progress-tab-active) {
   background: var(--darkred);

@@ -10,6 +10,15 @@ class ButtonProgress extends Component {
     this.progressCircle = this.progressCircle.bind(this);
     this.handlePlayPause = this.handlePlayPause.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  handleKeyPress(e) {
+    if (e.key === ' ') {
+      this.handlePlayPause();
+    } else if (e.key === 'Escape') {
+      this.handleReset();
+    }
   }
 
   componentDidMount() {
@@ -22,6 +31,12 @@ class ButtonProgress extends Component {
 
     // optimised animation
     requestAnimationFrame(this.progressCircle);
+
+    document.addEventListener('keyup', this.handleKeyPress);
+  }
+
+  componentDidUnmount() {
+    document.removeEventListener('keyup', this.handleKeyPress);
   }
 
   componentDidUpdate(){

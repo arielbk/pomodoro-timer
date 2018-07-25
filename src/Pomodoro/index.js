@@ -102,8 +102,6 @@ class Pomodoro extends Component {
     this.setMouseDown = this.setMouseDown.bind(this);
     this.setMouseUp = this.setMouseUp.bind(this);
 
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-
     this.timerFunc = this.timerFunc.bind(this);
     this.onTimerEnd = this.onTimerEnd.bind(this);
 
@@ -124,24 +122,14 @@ class Pomodoro extends Component {
     this.setState({mouseDown:false});
   }
 
-  handleKeyPress(e) {
-    if (e.key === ' ') {
-      this.handlePlayPause();
-    } else if (e.key === 'Escape') {
-      this.handleReset(true);
-    }
-  }
-
   // keep track of mouse down and mouse up, and any key press
   componentDidMount() {
     document.addEventListener('mousedown', this.setMouseDown);
     document.addEventListener('mouseup', this.setMouseUp);
-    document.addEventListener('keyup', this.handleKeyPress);
   }
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.setMouseDown);
     document.removeEventListener('mouseup', this.setMouseUp);
-    document.addEventListener('keyup', this.handleKeyPress);
   }
 
 
