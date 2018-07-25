@@ -14,10 +14,10 @@ class Pomodoro extends Component {
     this.state = {
       activeTimer: {
         name: 'work',
-        timeRemaining: 1500,
+        timeRemaining: 5,
         paused: true,
-        now: 0,
-        then: 0,
+        untilTime: 0,
+        intervalID: 0,
       },
 
       showSettings: false,
@@ -41,24 +41,22 @@ class Pomodoro extends Component {
       // WORK TIMER
       work: {
         name: 'work',
-        duration: 1500, // seconds - 25 min default
-        timeRemaining: 1500,
+        duration: 5, // seconds - 25 min default
         sound: 'Triumph',
       },
 
       // BREAK TIMER
       break: {
         name: 'break',
-        duration: 300, // seconds - 5 min default
-        timeRemaining: 300,
+        duration: 3, // seconds - 5 min default
+        timeRemaining: 3,
         sound: 'Bell',
       },
 
       // LONG BREAK TIMER
       longBreak: {
         name: 'longBreak',
-        duration: 900, // seconds - 15 min default
-        timeRemaining: 900,
+        duration: 10, // seconds - 15 min default
         sound: 'Winning'
       },
 
@@ -106,10 +104,7 @@ class Pomodoro extends Component {
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
 
-    this.changeState = this.changeState.bind(this);
-
     this.timerFunc = this.timerFunc.bind(this);
-    this.timerClone = this.timerClone.bind(this);
     this.onTimerEnd = this.onTimerEnd.bind(this);
   }
 
@@ -148,12 +143,8 @@ class Pomodoro extends Component {
   //                                                                              FUNCTIONS
   // -----------------------------------------------------------------------------------------
 
-  changeState(...args) {
-    this.setState(...args);
-  }
-
   // --------------------------------------------------------------------------
-  //                                           timer function - to rewrite
+  //                                           timer function
   // --------------------------------------------------------------------------
 
   // timer function called every second while timer is on
@@ -162,33 +153,49 @@ class Pomodoro extends Component {
     const timer = {...this.state.activeTimer};
 
     // if timer ends
-    if (timer.timeRemaining < 1) this.onTimerEnd(timer);
+    if (timer.timeRemaining < 1) {
+      this.onTimerEnd(timer);
+      return;
+    }
 
-    timer.timeRemaining = Math.round((timer.then - Date.now()) / 1000);
-    // timer.timeRemaining = Date.now();
+    timer.timeRemaining = Math.round((timer.untilTime - Date.now()) / 1000);
 
     // set new state
     this.setState({ activeTimer: timer }) 
   }
 
   // --------------------------------------------------------------------------
-  //                                           timer cloner
+  //                                           timer ends
   // --------------------------------------------------------------------------
 
-  timerClone() { // defaults to work timer
-    return {...this.state[this.state.activeTimer.name]};
-  }
-
-
   onTimerEnd() {
-    this.handleReset();
+    let activeTimer = {...this.state.activeTimer};
+    clearInterval(activeTimer.intervalID);
 
-    const timer = this.timerClone();
+    this.refs[this.state[activeTimer.name].sound].play();
 
-    // play the appropriate sound for the timer
-    this.props.playSound(timer.name);
+    let nextTimer;
+    if (activeTimer.name === 'work') {
+      const pomodoros = this.state.pomodoros + 1;
+      this.setState({pomodoros});
+      if (pomodoros === this.state.pomodoroSet) {
+        nextTimer = {...this.state.longBreak};
+      } else {
+        nextTimer = {...this.state.break};
+      }
+    } else {
+      nextTimer = {...this.state.work};
+    }
 
+    activeTimer.name = nextTimer.name;
+    activeTimer.timeRemaining = nextTimer.duration;
+    activeTimer.paused = true;
+
+    this.setState({ activeTimer });
   };
+
+
+
 
 
   // -----------------------------------------------------------------------------------------
@@ -200,7 +207,7 @@ class Pomodoro extends Component {
     return (
       <div className="app">
 
-        <View {...this.state} changeState={this.changeState} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} />
+        <View {...this.state} changeState={args => this.setState({...args})} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} />
         <audio src={Bell} ref="Bell" />
         <audio src={Triumph} ref="Triumph" />
         <audio src={LevelUp} ref="LevelUp" />

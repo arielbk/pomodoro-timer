@@ -7,6 +7,7 @@ class ButtonProgress extends Component {
     
     this.progressCircle = this.progressCircle.bind(this);
     this.handlePlayPause = this.handlePlayPause.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   componentDidMount() {
@@ -33,11 +34,11 @@ class ButtonProgress extends Component {
 
     // pause or play the timer depending on current state
     if (timer.paused) {
-      timer.then = Date.now() + this.props.activeTimer.timeRemaining * 1000;
+      timer.untilTime = Date.now() + this.props.activeTimer.timeRemaining * 1000;
+      timer.intervalID = setInterval(() => this.props.timerFunc(), 1000);
       this.props.changeState({ activeTimer: timer });
-      this.timerInterval = setInterval(() => this.props.timerFunc(), 1000);
     } else {
-      clearInterval(this.timerInterval);
+      clearInterval(timer.intervalID);
     }
 
     timer.paused = !timer.paused;
@@ -49,71 +50,38 @@ class ButtonProgress extends Component {
   //                                           handle reset
   // --------------------------------------------------------------------------
 
-  // reset all state, if button is pressed then revert to work timer
-  onResetClick(resetButton = false) { // normal reset by default
+  // default back to work timer
+  handleReset() {
+    const activeTimer = {...this.props.activeTimer};
 
     // end any running timer function
-    clearInterval(this.state.intervalID);
+    clearInterval(activeTimer.intervalID);
 
-    // if this reset is from the button, revert to work timer...
-    if (resetButton) {
-      const styles = JSON.parse(JSON.stringify(this.state.styles));
-
-      styles.title = {
-        workTitle: {
-          color: 'var(--lightred)',
-          borderBottom: '6px solid var(--lightred)'
-        },
-        breakTitle: { color: '', borderBottom: '' },
-        longBreakTitle: { color: '', borderBottom: ''},
-      }
-
-      // icon to change
-      const playPauseIcon = 'fas fa-play';
-      
-      styles.font.color = 'var(--lightred)';
-      // styles.playPause.color = 'var(--lightgreen)';
-      styles.background.background = 'var(--darkred)'
-
-      this.setState({ workTime: true, styles, playPauseIcon });
-    }
-
-    const workTimer = {...this.state.work};
-    const breakTimer = {...this.state.break};
-    const longBreakTimer = {...this.state.longBreak};
+    const duration = this.props.work.duration;
     
+    activeTimer.name = 'work';
+    activeTimer.timeRemaining = duration;
+    activeTimer.paused = true;
 
-    // reset all values
-    workTimer.timeRemaining = workTimer.duration;
-    workTimer.started = false;
-    workTimer.timing = false;
-
-    breakTimer.timeRemaining = breakTimer.duration;
-    breakTimer.started = false;
-    breakTimer.timing = false;
-    
-    longBreakTimer.timeRemaining = longBreakTimer.duration;
-    longBreakTimer.started = false;
-    longBreakTimer.timing = false;
-
-    this.updateTimeShown(workTimer.timeRemaining);
-
-    this.setState({ work: workTimer, break: breakTimer, longBreak: longBreakTimer, longBreakTime: false, progressPercent: 0, });
+    this.props.changeState({ activeTimer });
   }
 
   progressCircle() {
+    const timerName = this.props.activeTimer.name;
+    const duration = this.props[timerName].duration;
+    const timeRemaining = this.props.activeTimer.timeRemaining;
+    const progress = (duration - timeRemaining) / duration;
 
-    let endPoint = ((this.props.progressPercent/100) * Math.PI * 2);
-
+    let endPoint = ((progress) * Math.PI * 2);
     this.circle.clearRect(0,0,this.cw,this.ch); // clear canvas every time function is called
 
     this.circle.lineWidth = 22; // stroke size
-    if (this.props.workTime) {
-      this.circle.strokeStyle = '#cf4547';
-    } else if (!this.props.WorkTime && this.props.longBreakTime) {
-      this.circle.strokeStyle = '#8df37a';
-    } else {
-      this.circle.strokeStyle = '#d1802a';
+    if (timerName === 'work') {
+      this.circle.strokeStyle = '#cf4547'; // var(--lightred)
+    } else if (timerName === 'break') {
+      this.circle.strokeStyle = '#e2d34e'; // var(--lightorange)
+    } else if (timerName === 'longBreak') {
+      this.circle.strokeStyle = '#8df37a'; // var(--lightgreen)
     }
 
     this.circle.beginPath();
@@ -125,13 +93,13 @@ class ButtonProgress extends Component {
   render() {
       return (
     <div className="buttons-container">  
-      <div className="reset-button" onClick={this.props.onReset}>✕</div>
+      <div className="reset-button" onClick={this.handleReset}>✕</div>
       <div 
         className="button-progress"
         style={this.props.styles.background}
       >
         <div className="button-progress-inner">
-          <i className={this.props.faIcon} style={this.props.styles.font}></i>
+          <i className={this.props.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'} style={this.props.styles.font}></i>
         </div>
       </div>
       <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.handlePlayPause}/>

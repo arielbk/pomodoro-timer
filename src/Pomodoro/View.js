@@ -47,7 +47,7 @@ class View extends Component {
   }
 
   // --------------------------------------------------------------------------
-  //                                           timer styler
+  //                                           timer styler - TO DO!!!
   // --------------------------------------------------------------------------
 
   timerStyler() {
@@ -109,13 +109,14 @@ class View extends Component {
 
       <div className="main-content">
       <ButtonProgress 
-        styles={this.props.styles} 
-        handleClick={this.timerFunc}
-        faIcon={this.props.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'}
-        // onReset={() => this.handleReset(true)}
-        activeTimer={this.props.activeTimer} // pass the actual timer
-        timerFunc={this.props.timerFunc}
         changeState={this.props.changeState}
+        styles={this.props.styles}
+        activeTimer={this.props.activeTimer}
+        timerFunc={this.props.timerFunc}
+        work={this.props.work}
+        break={this.props.break}
+        longBreak={this.props.longBreak}
+        intervalID={this.props.intervalID}
       />
       {/* <ShowTime
         font={this.props.styles.font}
