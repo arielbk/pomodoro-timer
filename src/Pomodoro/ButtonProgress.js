@@ -1,6 +1,8 @@
+// this could be split into some sub-components
+// play/pause button and circular progress bar component
+
 import React, { Component } from 'react';
 
-// play/pause button and circular progress bar component
 class ButtonProgress extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +20,7 @@ class ButtonProgress extends Component {
     this.cw = this.circle.canvas.width;
     this.ch = this.circle.canvas.height;
 
+    // optimised animation
     requestAnimationFrame(this.progressCircle);
   }
 

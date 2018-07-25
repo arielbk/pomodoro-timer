@@ -106,6 +106,8 @@ class Pomodoro extends Component {
 
     this.timerFunc = this.timerFunc.bind(this);
     this.onTimerEnd = this.onTimerEnd.bind(this);
+
+    this.timerStyler = this.timerStyler.bind(this);
   }
 
   // -----------------------------------------------------------------------------------------
@@ -191,11 +193,51 @@ class Pomodoro extends Component {
     activeTimer.timeRemaining = nextTimer.duration;
     activeTimer.paused = true;
 
-    this.setState({ activeTimer });
+    this.setState({ activeTimer }, this.timerStyler);
   };
 
 
+// --------------------------------------------------------------------------
+  //       timer styler - does not really belong here - styled components coming
+  // --------------------------------------------------------------------------
 
+  timerStyler() {
+
+    const styles = JSON.parse(JSON.stringify(this.state.styles)); // deep clone
+    const timerName = this.state.activeTimer.name;
+
+    // empty out styles
+    styles.titles = {
+      workTitle: { color: '', borderBottom: '' },
+      breakTitle: { color: '', borderBottom: '' },
+      longBreakTitle: { color: '', borderBottom: '' }
+    }
+
+    if (timerName === 'work') { // reflect next work cycle
+      styles.titles.workTitle.color = 'var(--lightred)';
+      styles.titles.workTitle.borderBottom = '6px solid var(--lightred)';
+
+      styles.font.color = 'var(--lightred)';
+      styles.background.background = 'var(--darkred)';
+
+    } else if (timerName === 'break') {
+      styles.titles.breakTitle.color = 'var(--lightorange)';
+      styles.titles.breakTitle.borderBottom = '6px solid var(--lightorange)';
+
+      styles.font.color = 'var(--lightorange)';
+      styles.background.background = 'var(--darkorange)';
+
+    } else if (timerName === 'longBreak' ) {
+      styles.titles.longBreakTitle.color = 'var(--lightgreen)';
+      styles.titles.longBreakTitle.borderBottom = '6px solid var(--lightgreen)';
+      styles.font.color = 'var(--lightgreen)';
+      styles.background.background = 'var(--darkgreen)';
+
+    }  
+
+    // set new styles
+    this.setState({ styles });
+  }
 
 
   // -----------------------------------------------------------------------------------------

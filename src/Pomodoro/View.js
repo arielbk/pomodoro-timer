@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ButtonProgress from './ButtonProgress';
-// import ShowTime from './ShowTime';
+import ShowTime from './ShowTime';
 // import Counters from './Counters';
 // import Settings from './Settings';
 
@@ -9,7 +9,7 @@ class View extends Component {
     super(props);
     this.handleSettingsToggle = this.handleSettingsToggle.bind(this);
     this.handleAboutToggle = this.handleAboutToggle.bind(this);
-    this.timerStyler = this.timerStyler.bind(this);
+    
   }
 
   // --------------------------------------------------------------------------
@@ -46,59 +46,6 @@ class View extends Component {
     this.props.changeState({styles});
   }
 
-  // --------------------------------------------------------------------------
-  //                                           timer styler - TO DO!!!
-  // --------------------------------------------------------------------------
-
-  timerStyler() {
-
-    const styles = this.props.styles;
-    const activeTimer = this.props.activeTimer;
-
-    // empty out titles styles
-    styles.titles = {
-      workTitle: { color: '', borderBottom: '' },
-      breakTitle: { color: '', borderBottom: '' },
-      longBreakTitle: { color: '', borderBottom: '' }
-    }
-
-    if (activeTimer === 'longBreak' ) { // reflect long break cycle
-      styles.titles.longBreakTitle.color = 'var(--lightgreen)';
-      styles.titles.longBreakTitle.borderBottom = '6px solid var(--lightgreen)';
-      styles.font.color = 'var(--lightgreen)';
-      styles.background.background = 'var(--darkgreen)';
-
-      this.updateTimeShown(this.state.longBreak.timeRemaining);
-      this.props.changeState(prevState => { 
-        return { pomodoros: prevState.pomodoros + 1, progressPercent: 0 } 
-      });
-
-    } else if (activeTimer === 'work') { // reflect next work cycle
-      styles.titles.workTitle.color = 'var(--lightred)';
-      styles.titles.workTitle.borderBottom = '6px solid var(--lightred)';
-
-      styles.font.color = 'var(--lightred)';
-      styles.background.background = 'var(--darkred)';
-
-      this.updateTimeShown(this.state.work.timeRemaining);
-      this.props.changeState({ longBreakTime: false });
-
-    } else if (activeTimer === 'break') {
-      styles.titles.breakTitle.color = 'var(--lightorange)';
-      styles.titles.breakTitle.borderBottom = '6px solid var(--lightorange)';
-
-      styles.font.color = 'var(--lightorange)';
-      styles.background.background = 'var(--darkorange)';
-
-      this.updateTimeShown(this.state.break.timeRemaining);
-      this.props.changeState(prevState => {
-        return { pomodoros: prevState.pomodoros + 1, longBreakTime: false}
-      });
-    }
-
-    // set new styles
-    this.props.changeState({ styles });
-  }
 
 
   render() {
@@ -118,11 +65,11 @@ class View extends Component {
         longBreak={this.props.longBreak}
         intervalID={this.props.intervalID}
       />
-      {/* <ShowTime
+      <ShowTime
         font={this.props.styles.font}
-        time={this.props.showTime}
+        timeRemaining={this.props.activeTimer.timeRemaining}
       />
-      <Counters 
+      {/* <Counters 
         pomodoros={this.props.pomodoros}
         goal={this.props.goal}
       /> */}
