@@ -108,6 +108,10 @@ class Pomodoro extends Component {
     this.onTimerEnd = this.onTimerEnd.bind(this);
 
     this.timerStyler = this.timerStyler.bind(this);
+
+    this.changeState = this.changeState.bind(this);
+
+    this.handleSampleSound = this.handleSampleSound.bind(this);
   }
 
   // -----------------------------------------------------------------------------------------
@@ -240,16 +244,28 @@ class Pomodoro extends Component {
   }
 
 
+  handleSampleSound(timer) {
+    const sound = this.state[timer].sound;
+    this.refs[sound].play();
+  }
+
+
+
+
+  changeState(args) {
+    this.setState({...args}, () => args.activeTimer ? this.timerStyler() : '');
+    // this will also check the styles if the active timer is interacted with...
+  }
+
   // -----------------------------------------------------------------------------------------
   //                                                                              MAIN RENDER
   // -----------------------------------------------------------------------------------------
-
 
   render() {
     return (
       <div className="app">
 
-        <View {...this.state} changeState={args => this.setState({...args})} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} />
+        <View {...this.state} changeState={this.changeState} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} onSampleSound={this.handleSampleSound} />
         <audio src={Bell} ref="Bell" />
         <audio src={Triumph} ref="Triumph" />
         <audio src={LevelUp} ref="LevelUp" />

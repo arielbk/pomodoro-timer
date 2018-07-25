@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import ButtonProgress from './ButtonProgress';
 import ShowTime from './ShowTime';
-// import Counters from './Counters';
-// import Settings from './Settings';
+import Counters from './Counters';
+import Settings from './Settings/index.js';
 
 class View extends Component {
   constructor(props) {
     super(props);
     this.handleSettingsToggle = this.handleSettingsToggle.bind(this);
-    this.handleAboutToggle = this.handleAboutToggle.bind(this);
-    
+    this.handleAboutToggle = this.handleAboutToggle.bind(this);    
   }
 
   // --------------------------------------------------------------------------
@@ -69,41 +68,32 @@ class View extends Component {
         font={this.props.styles.font}
         timeRemaining={this.props.activeTimer.timeRemaining}
       />
-      {/* <Counters 
+      <Counters 
         pomodoros={this.props.pomodoros}
         goal={this.props.goal}
-      /> */}
+      />
     </div>
     
-      {/* <Settings
-      titleStyles={this.props.styles.titles}
-      work={this.props.work}
-      break={this.props.break}
-      longBreak={this.props.longBreak}
-      // onDurationChange={(timer, change) => this.handleDurationChange(timer, change)}
-      // onGoalChange={change => this.handleGoalChange(change)}
-      goal={this.props.goal}
-      pomodoroSet={this.props.pomodoroSet}
-      // handleSetChange={this.handleSetChange}
-      sounds={this.props.sounds}
-      workSound={this.props.work.sound}
-      breakSound={this.props.break.sound}
-      longBreakSound={this.props.longBreak.sound}
-      // onSoundSelect={(timer, sound) => this.handleSoundSelect(timer, sound)}
-      // onSampleSound={timer => {
-      //   if (timer === 'work') {
-      //     this.refs[this.props.work.sound].play();
-      //   } else if (timer === 'break') {
-      //     this.refs[this.props.break.sound].play();
-      //   } else if (timer === 'longBreak') {
-      //     this.refs[this.props.longBreak.sound].play();
-      //   }
-      // }}
-      showSettings={this.props.showSettings}
-      settingsStyle={this.props.styles.settings}
-      // onMouseOver={this.handleSettingsToggle}
-      // onMouseOut={this.handleSettingsToggle}
-      /> */}
+      <Settings
+        changeState={this.props.changeState}
+        activeTimer={this.props.activeTimer}
+        mouseDown={this.props.mouseDown}
+        titleStyles={this.props.styles.titles}
+        work={this.props.work}
+        break={this.props.break}
+        longBreak={this.props.longBreak}
+        goal={this.props.goal}
+        pomodoroSet={this.props.pomodoroSet}
+        sounds={this.props.sounds}
+        workSound={this.props.work.sound}
+        breakSound={this.props.break.sound}
+        longBreakSound={this.props.longBreak.sound}
+        onSampleSound={this.props.onSampleSound}
+        showSettings={this.props.showSettings}
+        settingsStyle={this.props.styles.settings}
+        onMouseOver={this.handleSettingsToggle}
+        onMouseOut={this.handleSettingsToggle}
+      />
 
       <div className="about-pomodoro" style={this.props.styles.about}>
         <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.</p>
