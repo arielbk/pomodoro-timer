@@ -1,128 +1,121 @@
 import React, { Component } from 'react';
 import ButtonProgress from './ButtonProgress';
-import ShowTime from './ShowTime';
-import Counters from './Counters';
-import Settings from './Settings';
+// import ShowTime from './ShowTime';
+// import Counters from './Counters';
+// import Settings from './Settings';
 
 class View extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSettingsToggle = this.handleSettingsToggle.bind(this);
+    this.handleAboutToggle = this.handleAboutToggle.bind(this);
+    this.timerStyler = this.timerStyler.bind(this);
+  }
 
   // --------------------------------------------------------------------------
-  //                                           timer function
+  //                                           timer end function - come back to
+  // -------------------------------------------------------------------------- 
+
+    // --------------------------------------------------------------------------
+  //                                           handle settings toggle
   // --------------------------------------------------------------------------
 
-  // timer function called every second while timer is on
-  timerFunc() {
+  handleSettingsToggle() {
+    const styles = JSON.parse(JSON.stringify(this.props.styles));
+    !styles.settings.maxHeight
+      ? styles.settings.maxHeight = '999px'
+      : styles.settings.maxHeight = 0;
+    this.props.changeState({styles});
+  }
 
-    // clone active timer
-    let timer;
-    if (this.state.longBreakTime) {
-      timer = this.timerClone('longBreak');
-    } else if (this.state.workTime) {
-      timer = this.timerClone('work')     
+  // --------------------------------------------------------------------------
+  //                                           handle about toggle
+  // --------------------------------------------------------------------------
+
+  handleAboutToggle() {
+    const styles = JSON.parse(JSON.stringify(this.props.styles));
+    if (!styles.about.maxHeight) {
+      styles.about.maxHeight = '999px';
+      styles.about.marginTop = '2em';
+      styles.about.padding = '1em 2em';
     } else {
-      timer = this.timerClone('break');
+      styles.about.maxHeight = 0;
+      styles.about.marginTop = 0;
+      styles.about.padding = '0 2em';
+    }
+    this.props.changeState({styles});
+  }
+
+  // --------------------------------------------------------------------------
+  //                                           timer styler
+  // --------------------------------------------------------------------------
+
+  timerStyler() {
+
+    const styles = this.props.styles;
+    const activeTimer = this.props.activeTimer;
+
+    // empty out titles styles
+    styles.titles = {
+      workTitle: { color: '', borderBottom: '' },
+      breakTitle: { color: '', borderBottom: '' },
+      longBreakTitle: { color: '', borderBottom: '' }
     }
 
-    // styles to re-set
-    const styles = JSON.parse(JSON.stringify(this.state.styles)); // deep clone
+    if (activeTimer === 'longBreak' ) { // reflect long break cycle
+      styles.titles.longBreakTitle.color = 'var(--lightgreen)';
+      styles.titles.longBreakTitle.borderBottom = '6px solid var(--lightgreen)';
+      styles.font.color = 'var(--lightgreen)';
+      styles.background.background = 'var(--darkgreen)';
 
-    // if timer ends
-    if (timer.timeRemaining < 1) {
-      this.handleReset();
-      if (this.state.workTime &&
-          ((this.state.pomodoros + 1) % this.state.pomodoroSet) === 0 ) 
-                        this.setState({ longBreakTime: true });
-      this.setState({ workTime: !this.state.workTime })
+      this.updateTimeShown(this.state.longBreak.timeRemaining);
+      this.props.changeState(prevState => { 
+        return { pomodoros: prevState.pomodoros + 1, progressPercent: 0 } 
+      });
 
-      // play the appropriate sound for the timer
-      if (timer.name === 'work') {
-        this.refs[this.state.work.sound].play();
-      } else if (timer.name === 'break') {
-        this.refs[this.state.break.sound].play();
-      } else if (timer.name === 'longBreak') {
-        this.refs[this.state.longBreak.sound].play();
-      }
+    } else if (activeTimer === 'work') { // reflect next work cycle
+      styles.titles.workTitle.color = 'var(--lightred)';
+      styles.titles.workTitle.borderBottom = '6px solid var(--lightred)';
 
-      // empty out titles styles
-      styles.titles = {
-        workTitle: { color: '', borderBottom: '' },
-        breakTitle: { color: '', borderBottom: '' },
-        longBreakTitle: { color: '', borderBottom: '' }
-      }
+      styles.font.color = 'var(--lightred)';
+      styles.background.background = 'var(--darkred)';
 
-      if (this.state.longBreakTime ) { // reflect long break cycle
-        styles.titles.longBreakTitle.color = 'var(--lightgreen)';
-        styles.titles.longBreakTitle.borderBottom = '6px solid var(--lightgreen)';
-        styles.font.color = 'var(--lightgreen)';
-        styles.background.background = 'var(--darkgreen)';
+      this.updateTimeShown(this.state.work.timeRemaining);
+      this.props.changeState({ longBreakTime: false });
 
-        this.updateTimeShown(this.state.longBreak.timeRemaining);
-        this.setState(prevState => { 
-          return { pomodoros: prevState.pomodoros + 1, progressPercent: 0 } 
-        });
-      } else if (this.state.workTime) { // reflect next work cycle
-        styles.titles.workTitle.color = 'var(--lightred)';
-        styles.titles.workTitle.borderBottom = '6px solid var(--lightred)';
+    } else if (activeTimer === 'break') {
+      styles.titles.breakTitle.color = 'var(--lightorange)';
+      styles.titles.breakTitle.borderBottom = '6px solid var(--lightorange)';
 
-        styles.font.color = 'var(--lightred)';
-        styles.background.background = 'var(--darkred)';
+      styles.font.color = 'var(--lightorange)';
+      styles.background.background = 'var(--darkorange)';
 
-        this.updateTimeShown(this.state.work.timeRemaining);
-        this.setState({ longBreakTime: false });
-      } else { // reflect next break cycle
-        styles.titles.breakTitle.color = 'var(--lightorange)';
-        styles.titles.breakTitle.borderBottom = '6px solid var(--lightorange)';
-
-        styles.font.color = 'var(--lightorange)';
-        styles.background.background = 'var(--darkorange)';
-
-        this.updateTimeShown(this.state.break.timeRemaining);
-        this.setState(prevState => {
-          return { pomodoros: prevState.pomodoros + 1, longBreakTime: false}
-        });
-      }
-
-      // set new styles
-      const playPauseIcon = 'fas fa-play';
-      this.setState({ styles, playPauseIcon, progressPercent: 0 });
-
-      return; // end function
-    };
-
-    // V  TIMER IS STILL RUNNING  V
-
-    // decrement the active timer
-    timer.timeRemaining--;
-
-    this.updateTimeShown(timer.timeRemaining);
-    const progressPercent = Number.parseFloat((timer.duration - timer.timeRemaining) / timer.duration * 100 ).toFixed(2);
-
-    // set new state
-    if (this.state.longBreakTime) {
-      this.setState({ longBreak: timer, progressPercent }) 
-    } else if (this.state.workTime) {
-      this.setState({ work: timer, progressPercent })     
-    } else {
-      this.setState({ break: timer, progressPercent });
+      this.updateTimeShown(this.state.break.timeRemaining);
+      this.props.changeState(prevState => {
+        return { pomodoros: prevState.pomodoros + 1, longBreakTime: false}
+      });
     }
+
+    // set new styles
+    this.props.changeState({ styles });
   }
 
 
   render() {
     return (
     <div>  
-        
+      <h1 className="main-header">Pomodoro Timer</h1>
+      <div className="top-divider"></div>
+
       <div className="main-content">
       <ButtonProgress 
-        playPauseColor={this.props.styles.playPause} 
-        // handleClick={this.handlePlayPause}
-        faIcon={this.props.playPauseIcon}
+        styles={this.props.styles} 
+        handleClick={this.timerFunc}
+        faIcon={this.props.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'}
         // onReset={() => this.handleReset(true)}
-        progressPercent={this.props.progressPercent}
-        workTime={this.props.workTime}
-        longBreakTime={this.props.longBreakTime}
-        fontColor={this.props.styles.font}
-        backgroundColor={this.props.styles.background}
+        activeTimer={this.props.activeTimer} // pass the actual timer
+        timerFunc={this.props.timerFunc}
+        changeState={this.props.changeState}
       />
       {/* <ShowTime
         font={this.props.styles.font}
@@ -163,6 +156,18 @@ class View extends Component {
       // onMouseOver={this.handleSettingsToggle}
       // onMouseOut={this.handleSettingsToggle}
       /> */}
+
+      <div className="about-pomodoro" style={this.props.styles.about}>
+        <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.</p>
+        <p>The technique uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short breaks.</p>
+        <p>These intervals are named pomodoros, the plural in English of the Italian word pomodoro (tomato), after the tomato-shaped kitchen timer that Cirillo used as a university student.</p>
+      <div className="close-btn-about" onClick={this.handleAboutToggle}>✕</div>
+      </div>
+
+      <div className="options">
+        <div className="options-btn-about" onClick={this.handleAboutToggle}>about</div>
+      </div>
+
     </div>
   )}
 }

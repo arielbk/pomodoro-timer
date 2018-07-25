@@ -1,3 +1,5 @@
+// all state is stored here, as well as top-most timer functions and sounds
+
 import React, { Component } from 'react';
 import View from './View';
 
@@ -6,30 +8,22 @@ import Triumph from '../Sounds/triumph.mp3';
 import LevelUp from '../Sounds/levelup.mp3';
 import Winning from '../Sounds/winning.mp3';
 
-// this is the part that can be seriously culled...
-
 class Pomodoro extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // these two booleans will determine whether it is work, break, or longBreak time
-      // but should they just be simplified into one?
-      workTime: true,
-      longBreakTime: false,
+      activeTimer: {
+        name: 'work',
+        timeRemaining: 1500,
+        paused: true,
+        now: 0,
+        then: 0,
+      },
 
       showSettings: false,
 
-      // the interval for the timer function (in order to stop it)
-      intervalID: 0,
-      // whether the active timer is currently running, and whether it has started (it can be started but paused)
-      timing: false,
-      timerStarted: false,
-
-      // helps with the settings incrementors and decrementors that fire while the mouse is down
+      // helps with the settings incrementors/decrementors that fire while the mouse is down
       mouseDown: false,
-
-      // current percentage of time elapsed in active timer - to display for the progress bar
-      progressPercent: 0,
 
       // pomodoros completed, pomodoro goal, pomodoros between each long break
       pomodoros: 0,
@@ -47,7 +41,7 @@ class Pomodoro extends Component {
       // WORK TIMER
       work: {
         name: 'work',
-        duration: 1500, // 25*60 -- 25 minutes is default
+        duration: 1500, // seconds - 25 min default
         timeRemaining: 1500,
         sound: 'Triumph',
       },
@@ -55,7 +49,7 @@ class Pomodoro extends Component {
       // BREAK TIMER
       break: {
         name: 'break',
-        duration: 300, // 5 minutes default
+        duration: 300, // seconds - 5 min default
         timeRemaining: 300,
         sound: 'Bell',
       },
@@ -63,11 +57,12 @@ class Pomodoro extends Component {
       // LONG BREAK TIMER
       longBreak: {
         name: 'longBreak',
-        duration: 900, // 15 minutes default
+        duration: 900, // seconds - 15 min default
         timeRemaining: 900,
         sound: 'Winning'
       },
 
+      // SHIFT TO STYLED COMPONENTS?
       styles: {
         // for the play and pause inner icon and the minutes remaining display
         font: {
@@ -99,24 +94,12 @@ class Pomodoro extends Component {
           margin: 0,
           padding: '0 2em',
         }
-      },
-
-      // time remaining to display - default work 25 min
-      showTime: {
-        mins: '25',
-        secs: '00',
-        msecs: '000',
-      },
-
-      playPauseIcon: 'fas fa-play',
+      }
     }
 
   // -----------------------------------------------------------------------------------------
   //                                                                        `this` BINDINGS
   // -----------------------------------------------------------------------------------------
-
-    this.handleSettingsToggle = this.handleSettingsToggle.bind(this);
-    this.handleAboutToggle = this.handleAboutToggle.bind(this);
 
     this.setMouseDown = this.setMouseDown.bind(this);
     this.setMouseUp = this.setMouseUp.bind(this);
@@ -124,6 +107,10 @@ class Pomodoro extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
 
     this.changeState = this.changeState.bind(this);
+
+    this.timerFunc = this.timerFunc.bind(this);
+    this.timerClone = this.timerClone.bind(this);
+    this.onTimerEnd = this.onTimerEnd.bind(this);
   }
 
   // -----------------------------------------------------------------------------------------
@@ -156,6 +143,7 @@ class Pomodoro extends Component {
     document.addEventListener('keyup', this.handleKeyPress);
   }
 
+
   // -----------------------------------------------------------------------------------------
   //                                                                              FUNCTIONS
   // -----------------------------------------------------------------------------------------
@@ -164,51 +152,44 @@ class Pomodoro extends Component {
     this.setState(...args);
   }
 
+  // --------------------------------------------------------------------------
+  //                                           timer function - to rewrite
+  // --------------------------------------------------------------------------
+
+  // timer function called every second while timer is on
+  timerFunc() {
+    // clone active timer
+    const timer = {...this.state.activeTimer};
+
+    // if timer ends
+    if (timer.timeRemaining < 1) this.onTimerEnd(timer);
+
+    timer.timeRemaining = Math.round((timer.then - Date.now()) / 1000);
+    // timer.timeRemaining = Date.now();
+
+    // set new state
+    this.setState({ activeTimer: timer }) 
+  }
 
   // --------------------------------------------------------------------------
   //                                           timer cloner
   // --------------------------------------------------------------------------
 
-  timerClone(timer = 'work') { // defaults to work timer
-    if (timer === 'work') {
-      return {...this.state.work};
-    } else if (timer === 'break') {
-      return {...this.state.break};
-    } else if (timer === 'longBreak') {
-      return {...this.state.longBreak};
-    }
-    return;
+  timerClone() { // defaults to work timer
+    return {...this.state[this.state.activeTimer.name]};
   }
 
-  // --------------------------------------------------------------------------
-  //                                           handle settings toggle
-  // --------------------------------------------------------------------------
 
-  handleSettingsToggle() {
-    const styles = JSON.parse(JSON.stringify(this.state.styles));
-    !styles.settings.maxHeight
-      ? styles.settings.maxHeight = '999px'
-      : styles.settings.maxHeight = 0;
-    this.setState({styles});
-  }
+  onTimerEnd() {
+    this.handleReset();
 
-  // --------------------------------------------------------------------------
-  //                                           handle about toggle
-  // --------------------------------------------------------------------------
+    const timer = this.timerClone();
 
-  handleAboutToggle() {
-    const styles = JSON.parse(JSON.stringify(this.state.styles));
-    if (!styles.about.maxHeight) {
-      styles.about.maxHeight = '999px';
-      styles.about.marginTop = '2em';
-      styles.about.padding = '1em 2em';
-    } else {
-      styles.about.maxHeight = 0;
-      styles.about.marginTop = 0;
-      styles.about.padding = '0 2em';
-    }
-    this.setState({styles});
-  }
+    // play the appropriate sound for the timer
+    this.props.playSound(timer.name);
+
+  };
+
 
   // -----------------------------------------------------------------------------------------
   //                                                                              MAIN RENDER
@@ -218,21 +199,8 @@ class Pomodoro extends Component {
   render() {
     return (
       <div className="app">
-        <h1 className="main-header">Pomodoro Timer</h1>
-        <div className="top-divider"></div>
-        
-          <View {...this.state} changeState={this.changeState}/>
 
-          <div className="about-pomodoro" style={this.state.styles.about}>
-            <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.</p>
-            <p>The technique uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short breaks. These intervals are named pomodoros, the plural in English of the Italian word pomodoro (tomato), after the tomato-shaped kitchen timer that Cirillo used as a university student.</p>
-          <div className="close-btn-about" onClick={this.handleAboutToggle}>✕</div>
-          </div>
-
-          <div className="options">
-            <div className="options-btn-about" onClick={this.handleAboutToggle}>about</div>
-          </div>
-        
+        <View {...this.state} changeState={this.changeState} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} />
         <audio src={Bell} ref="Bell" />
         <audio src={Triumph} ref="Triumph" />
         <audio src={LevelUp} ref="LevelUp" />

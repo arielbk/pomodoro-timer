@@ -570,16 +570,13 @@ h1.main-header {
   padding: .5em;
 }
 
-.options,
-.options-btn-settings,
 .options-btn-about {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.options-btn-settings:hover,
 .options-btn-about:hover {
   cursor: pointer;
   color: var(--lightgrey);
-}
+} 

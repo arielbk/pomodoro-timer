@@ -6,6 +6,7 @@ class ButtonProgress extends Component {
     super(props);
     
     this.progressCircle = this.progressCircle.bind(this);
+    this.handlePlayPause = this.handlePlayPause.bind(this);
   }
 
   componentDidMount() {
@@ -28,45 +29,20 @@ class ButtonProgress extends Component {
   // --------------------------------------------------------------------------
 
   handlePlayPause() {
-    // clone active timer
-    let timer;
-    if (this.state.longBreakTime) {
-      timer = this.timerClone('longBreak');
-    } else if (this.state.workTime) {
-      timer = this.timerClone('work')     
-    } else {
-      timer = this.timerClone('break');
-    }
-
-    // if this is a fresh timer, set its remaining time to input value
-    if (!timer.started) {
-      timer.timeRemaining = timer.duration;
-    }
+    let timer = this.props.activeTimer;
 
     // pause or play the timer depending on current state
-    if (timer.timing) { // pause the timer
-      clearInterval(this.state.intervalID);
-    } else { // run the timer and set new intervalID
-      this.setState({ intervalID: setInterval(() => this.timerFunc(), 1000) });
-    }
-
-    // timer has now changed, toggle whether it is active or paused
-    timer.started = true;
-    timer.timing = !timer.timing;
-
-    // icon to change
-    let playPauseIcon = {...this.state.playPauseIcon};
-    timer.timing
-      ? playPauseIcon = 'fas fa-pause'
-      : playPauseIcon = 'fas fa-play';
-
-    if (this.state.longBreakTime) {
-      this.setState({ longBreak: timer, playPauseIcon }) 
-    } else if (this.state.workTime) {
-      this.setState({ work: timer, playPauseIcon })     
+    if (timer.paused) {
+      timer.then = Date.now() + this.props.activeTimer.timeRemaining * 1000;
+      this.props.changeState({ activeTimer: timer });
+      this.timerInterval = setInterval(() => this.props.timerFunc(), 1000);
     } else {
-      this.setState({ break: timer, playPauseIcon });
+      clearInterval(this.timerInterval);
     }
+
+    timer.paused = !timer.paused;
+
+    this.props.changeState({activeTimer: timer})
   }
 
   // --------------------------------------------------------------------------
@@ -74,7 +50,7 @@ class ButtonProgress extends Component {
   // --------------------------------------------------------------------------
 
   // reset all state, if button is pressed then revert to work timer
-  handleReset(resetButton = false) { // normal reset by default
+  onResetClick(resetButton = false) { // normal reset by default
 
     // end any running timer function
     clearInterval(this.state.intervalID);
@@ -152,14 +128,13 @@ class ButtonProgress extends Component {
       <div className="reset-button" onClick={this.props.onReset}>✕</div>
       <div 
         className="button-progress"
-        onClick={this.props.handleClick}
-        style={this.props.backgroundColor}
+        style={this.props.styles.background}
       >
-        <div className="button-progress-inner" style={this.props.fontColor}>
-          <i className={this.props.faIcon} style={this.props.playPauseColor}></i>
+        <div className="button-progress-inner">
+          <i className={this.props.faIcon} style={this.props.styles.font}></i>
         </div>
       </div>
-      <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.props.handleClick} />
+      <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.handlePlayPause}/>
     </div>
     );
   }
