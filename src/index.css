@@ -47,16 +47,6 @@ body {
   padding: 40px 60px 80px 60px;
 }
 
-@media(max-width: 375px) {
-  body {
-    font-size: 10px;
-  }
-  .app {
-    margin: 0;
-    padding: 20px 30px 40px 30px;
-  }
-}
-
 h1, h2 {
   font-family: 'Rubik', sans-serif;
   font-weight: 700;
@@ -71,6 +61,16 @@ h1, h2 {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+@media(max-width: 375px) {
+  body {
+    font-size: 12px;
+  }
+  .app {
+    margin: 0;
+    padding: 20px 25px 40px 25px;
+  }
 }
 
   /* --------------------------------------------------------------------------- */
@@ -91,10 +91,29 @@ h1.main-header {
   margin: 20px 0;
 }
 
+  /* ---------------------------------------------------- */
+ /*                              about component         */
+/* ---------------------------------------------------- */
 
+.about-toggle {
+  position: absolute;
+  top: 1.5em;
+  right: 2em;
+  background: var(--lightgrey);
+  color: var(--darkgrey);
+  padding: .2em;
+  border-radius: 6px;
+  opacity: .2;
+  transition: .2s;
+}
+.about-toggle:hover {
+  cursor: pointer;
+  opacity: 1;
+}
 .about-pomodoro {
   position: absolute;
   top: 6em;
+  /* full width minus margins on either side... */
   width: calc(100% - 120px);
   background: var(--lightgrey);
   color: var(--darkgrey);
@@ -103,7 +122,7 @@ h1.main-header {
   overflow: hidden;
   opacity: .9;
 
-  transition: 1s ease-in-out;
+  transition: .4s;
 }
 
 .close-btn-about {
@@ -117,6 +136,12 @@ h1.main-header {
   cursor: pointer;
 }
 
+@media(max-width: 375px) {
+  .about-pomodoro {
+    width: calc(100% - 50px);
+  }
+}
+
 
   /* --------------------------------------------------------------------------- */
  /*                                MAIN CONTENT                                 */
@@ -127,6 +152,13 @@ h1.main-header {
   justify-content: space-around;
   align-items: center;
   margin: 60px 0 40px 0;
+}
+
+@media(max-width: 375px) {
+  .main-content {
+    flex-wrap: wrap;
+    margin: 50px 0 40px 0;
+  }
 }
 
   /* --------------------------------------------------------------------------- */
@@ -143,7 +175,7 @@ h1.main-header {
   position: absolute;
   top: -15px;
   right: -15px;
-  font-size: 2em;
+  font-size: 40px;
   font-weight: 900;
 }
 
@@ -160,7 +192,8 @@ h1.main-header {
   width: 150px;
   height: 150px;
   border-radius: 100%;
-  font-size: 3.2em;
+  /* rigid font-size to keep dimensions */
+  font-size: 64px;
   transition: 1s;
 }
 
@@ -197,7 +230,14 @@ h1.main-header {
 }
 
 .fa-play {
-  margin-left: 1rem;
+  margin-left: 12px;
+}
+
+@media(max-width: 375px) {
+  .buttons-container {
+    /* force a new line for this component, and give it space */
+    margin: 0 50px 20px 50px;
+  }
 }
 
   /* --------------------------------------------------------------------------- */
@@ -266,15 +306,10 @@ h1.main-header {
  /*                                SETTINGS                                     */
 /* --------------------------------------------------------------------------- */
 
-  /* ---------------------------------------------------- */
- /*                              titles                  */
-/* ---------------------------------------------------- */
-
 .timer-settings {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
 }
 
 .timer-settings-content {
@@ -282,15 +317,32 @@ h1.main-header {
   transition: 1s;
 }
 
+@media(max-width: 375px) {
+  .timer-settings {
+    display: block;
+  }
+}
+
+  /* ---------------------------------------------------- */
+ /*                              titles                  */
+/* ---------------------------------------------------- */
+
 .timer-title {
   text-transform: lowercase;
   display: inline-block;
   transition: color .5s;
-  width: 220px;
+  width: 100%;
   height: 45px;
   text-align: center;
   padding: .4em;
   border-bottom: 6px solid var(--medgrey);
+  position: relative;
+}
+
+.timer-title::after {
+  content: '▾';
+  position: absolute;
+  right: 1em;
 }
 
 .settings-work:hover .work-title,
@@ -313,6 +365,14 @@ h1.main-header {
   cursor: pointer;
   color: var(--lightgrey);
   border-bottom: 6px solid var(--lightgreen) !important;
+}
+
+@media(max-width: 375px) {
+  .timer-title {
+    padding: 1em;
+    height: inherit;
+    width: 100%;
+  }
 }
 
   /* ---------------------------------------------------- */
@@ -378,6 +438,18 @@ h1.main-header {
   margin-top: 30px;
 }
 
+@media(max-width: 375px) {
+  .settings-item {
+    width: 100%;
+    margin: 0;
+  }
+  .settings-goal,
+  .settings-lb-set {
+    margin-bottom: 30px;
+    border-bottom: 3px solid var(--faintgrey);
+  }
+}
+
   /* ---------------------------------------------------- */
  /*                              sound settings          */
 /* ---------------------------------------------------- */
@@ -385,7 +457,6 @@ h1.main-header {
 .settings-sound {
   /* allow progress circles to wrap */
   flex-wrap: wrap;
-  width: 220px;
   text-align: center;
   border-bottom: 1px solid var(--faintgrey);
   border-top: 1px solid var(--faintgrey);
