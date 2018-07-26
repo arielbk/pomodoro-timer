@@ -14,7 +14,7 @@ class Pomodoro extends Component {
     this.state = {
       activeTimer: {
         name: 'work',
-        timeRemaining: 5,
+        timeRemaining: 5000,
         paused: true,
         untilTime: 0,
         intervalID: 0,
@@ -41,22 +41,21 @@ class Pomodoro extends Component {
       // WORK TIMER
       work: {
         name: 'work',
-        duration: 5, // seconds - 25 min default
+        duration: 5000, // mseconds - 25 min default
         sound: 'Triumph',
       },
 
       // BREAK TIMER
       break: {
         name: 'break',
-        duration: 3, // seconds - 5 min default
-        timeRemaining: 3,
+        duration: 3000, // mseconds - 5 min default
         sound: 'Bell',
       },
 
       // LONG BREAK TIMER
       longBreak: {
         name: 'longBreak',
-        duration: 10, // seconds - 15 min default
+        duration: 10000, // mseconds - 15 min default
         sound: 'Winning'
       },
 
@@ -147,15 +146,16 @@ class Pomodoro extends Component {
     const timer = {...this.state.activeTimer};
 
     // if timer ends
-    if (timer.timeRemaining < 1) {
+    if (timer.timeRemaining < 250) {
       this.onTimerEnd(timer);
       return;
     }
 
-    timer.timeRemaining = Math.round((timer.untilTime - Date.now()) / 1000);
+    timer.timeRemaining = Math.round(timer.untilTime - Date.now());
 
     // set new state
     this.setState({ activeTimer: timer }) 
+    console.log(timer.timeRemaining);
   }
 
   // --------------------------------------------------------------------------

@@ -52,8 +52,8 @@ class ButtonProgress extends Component {
 
     // pause or play the timer depending on current state
     if (timer.paused) {
-      timer.untilTime = Date.now() + this.props.activeTimer.timeRemaining * 1000;
-      timer.intervalID = setInterval(() => this.props.timerFunc(), 1000);
+      timer.untilTime = Date.now() + this.props.activeTimer.timeRemaining;
+      timer.intervalID = setInterval(() => this.props.timerFunc(), 50);
       this.props.changeState({ activeTimer: timer });
     } else {
       clearInterval(timer.intervalID);

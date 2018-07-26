@@ -3,6 +3,7 @@ import ButtonProgress from './ButtonProgress';
 import ShowTime from './ShowTime';
 import Counters from './Counters';
 import Settings from './Settings/index.js';
+import About from './About';
 
 class View extends Component {
   constructor(props) {
@@ -95,16 +96,7 @@ class View extends Component {
         onMouseOut={this.handleSettingsToggle}
       />
 
-      <About />
-      <div className="about-toggle" onClick={this.handleAboutToggle}>about</div>
-      <div className="about-pomodoro" style={this.props.styles.about}>
-        <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.</p>
-        <p>The technique uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short breaks.</p>
-        <p>These intervals are named pomodoros, the plural in English of the Italian word pomodoro (tomato), after the tomato-shaped kitchen timer that Cirillo used as a university student.</p>
-      <div className="close-btn-about" onClick={this.handleAboutToggle}>✕</div>
-      </div>
-
-
+      <About styles={this.props.styles.about} onAboutToggle={this.handleAboutToggle} />
 
     </div>
   )}
