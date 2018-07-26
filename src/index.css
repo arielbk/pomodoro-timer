@@ -1,6 +1,7 @@
 /* Responsive screen sizes for media queries:
-320px (small phone)
-768 (small tablet) */
+420px
+768
+920 */
 
   /* --------------------------------------------------------------------------- */
  /*                                GENERAL STYLES                               */
@@ -61,16 +62,6 @@ h1, h2 {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-@media(max-width: 375px) {
-  body {
-    font-size: 12px;
-  }
-  .app {
-    margin: 0;
-    padding: 20px 25px 40px 25px;
-  }
 }
 
   /* --------------------------------------------------------------------------- */
@@ -136,12 +127,6 @@ h1.main-header {
   cursor: pointer;
 }
 
-@media(max-width: 375px) {
-  .about-pomodoro {
-    width: calc(100% - 50px);
-  }
-}
-
 
   /* --------------------------------------------------------------------------- */
  /*                                MAIN CONTENT                                 */
@@ -152,13 +137,6 @@ h1.main-header {
   justify-content: space-around;
   align-items: center;
   margin: 60px 0 40px 0;
-}
-
-@media(max-width: 375px) {
-  .main-content {
-    flex-wrap: wrap;
-    margin: 50px 0 40px 0;
-  }
 }
 
   /* --------------------------------------------------------------------------- */
@@ -233,12 +211,7 @@ h1.main-header {
   margin-left: 12px;
 }
 
-@media(max-width: 375px) {
-  .buttons-container {
-    /* force a new line for this component, and give it space */
-    margin: 0 50px 20px 50px;
-  }
-}
+
 
   /* --------------------------------------------------------------------------- */
  /*                                SHOW TIME COMPONENT                          */
@@ -317,12 +290,6 @@ h1.main-header {
   transition: 1s;
 }
 
-@media(max-width: 375px) {
-  .timer-settings {
-    display: block;
-  }
-}
-
   /* ---------------------------------------------------- */
  /*                              titles                  */
 /* ---------------------------------------------------- */
@@ -367,13 +334,7 @@ h1.main-header {
   border-bottom: 6px solid var(--lightgreen) !important;
 }
 
-@media(max-width: 375px) {
-  .timer-title {
-    padding: 1em;
-    height: inherit;
-    width: 100%;
-  }
-}
+
 
   /* ---------------------------------------------------- */
  /*                              settings inners         */
@@ -438,17 +399,7 @@ h1.main-header {
   margin-top: 30px;
 }
 
-@media(max-width: 375px) {
-  .settings-item {
-    width: 100%;
-    margin: 0;
-  }
-  .settings-goal,
-  .settings-lb-set {
-    margin-bottom: 30px;
-    border-bottom: 3px solid var(--faintgrey);
-  }
-}
+
 
   /* ---------------------------------------------------- */
  /*                              sound settings          */
@@ -581,4 +532,68 @@ h1.main-header {
 }
 .settings-long-break .sound-progress-tab-active {
   background: var(--lightgreen);
+}
+
+  /* --------------------------------------------------------------------------- */
+ /*                                MEDIA QUERIES                                */
+/* --------------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  body {
+    font-size: 12px;
+  }
+  .app {
+    margin: 0;
+    padding: 20px 25px 40px 25px;
+  }
+
+  .about-toggle {
+    top: .5em;
+    right: 1em;
+  }
+  .about-pomodoro {
+    width: calc(100% - 50px);
+  }
+
+  .buttons-container {
+    /* force a new line for this component, and give it space */
+    margin: 0 100% 20px 100%;
+  }
+
+  .timer-settings {
+    display: block;
+  }
+
+  .timer-title {
+    padding: 1em;
+    height: inherit;
+    width: 100%;
+  }
+
+  .settings-item {
+    width: 100%;
+    margin: 0;
+  }
+  .settings-goal,
+  .settings-lb-set {
+    margin-bottom: 30px;
+    border-bottom: 3px solid var(--faintgrey);
+  }
+}
+
+@media (min-width: 420px) and (max-width: 780px) {
+  body {
+    font-size: 16px;
+  }
+  .app {
+    margin: 0;
+    padding: 20px 25px 40px 25px;
+  }
+}
+
+@media(max-width: 700px) {
+  .main-content {
+    flex-wrap: wrap;
+    margin: 50px 0 40px 0;
+  }
 }
