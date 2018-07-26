@@ -35,7 +35,7 @@ class ButtonProgress extends Component {
     document.addEventListener('keyup', this.handleKeyPress);
   }
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     document.removeEventListener('keyup', this.handleKeyPress);
   }
 
@@ -111,7 +111,7 @@ class ButtonProgress extends Component {
   render() {
       return (
     <div className="buttons-container">  
-      <div className="reset-button" onClick={this.handleReset}>✕</div>
+      <div className="reset-button noselect" onClick={this.handleReset}>✕</div>
       <div 
         className="button-progress"
         style={this.props.styles.background}

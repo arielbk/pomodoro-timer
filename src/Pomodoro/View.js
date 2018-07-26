@@ -95,6 +95,8 @@ class View extends Component {
         onMouseOut={this.handleSettingsToggle}
       />
 
+      <About />
+      <div className="about-toggle" onClick={this.handleAboutToggle}>about</div>
       <div className="about-pomodoro" style={this.props.styles.about}>
         <p>The Pomodoro Technique is a time management method developed by Francesco Cirillo in the late 1980s.</p>
         <p>The technique uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short breaks.</p>
@@ -102,9 +104,7 @@ class View extends Component {
       <div className="close-btn-about" onClick={this.handleAboutToggle}>✕</div>
       </div>
 
-      <div className="options">
-        <div className="options-btn-about" onClick={this.handleAboutToggle}>about</div>
-      </div>
+
 
     </div>
   )}
