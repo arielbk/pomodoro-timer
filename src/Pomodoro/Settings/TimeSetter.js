@@ -10,13 +10,13 @@ class TimeSetter extends Component {
 
     // clone timer and return if new duration is inappropriate
     timer = {...this.props.timer}
-    timer.duration = timer.duration + change * 60;
-    if (timer.duration < 0 || timer.duration > 5940) return; // 0 < timer < 99 minutes
+    timer.duration = timer.duration + change * 60 * 1000; // from minutes to milliseconds
+    if (timer.duration < 0 || timer.duration > 5940000) return; // 0 < timer < 99 minutes
 
     // time is added to active running timers to adjust
     const activeTimer = this.props.activeTimer;
     if (timer.name === activeTimer.name) {
-      activeTimer.timeRemaining += change * 60;
+      activeTimer.timeRemaining += change * 60 * 1000;
     }
 
     // set state
@@ -38,7 +38,7 @@ class TimeSetter extends Component {
     return (
       <div className={`settings-item settings-timer-${timerName}`} >
         <a className='decrement noselect' onMouseDown={() => this.handleDurationChange(this.props.timer.name, -1)}>–</a>
-        <div className='settings-timer-show'>{Math.floor(this.props.timer.duration / 60)} min</div>
+        <div className='settings-timer-show'>{Math.floor(this.props.timer.duration / 60 / 1000)} min</div>
         <a className='increment noselect' onMouseDown={() => this.handleDurationChange(this.props.timer.name, +1 )}>+</a>
       </div>
     );

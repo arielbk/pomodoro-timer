@@ -1,10 +1,7 @@
 // TODO:
-// responsiveness for smaller screens and mobile-specific features
-// timer can be made more efficient and milliseconds added
-// refactor CSS
 // local storage for user settings
-// access icons locally? Font awesome adds to load time but users may have it cached...
-// also - google fonts to local
+// incorporate styled components
+// more react-y things to enhance performance and readability
 
 import React from 'react';
 import Pomodoro from './Pomodoro';

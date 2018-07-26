@@ -2,7 +2,7 @@
   "name": "pomodoro2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://arielbk.com/pomodoro2",
+  "homepage": "http://arielbk.com/pomodorotimer",
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
