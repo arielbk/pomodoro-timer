@@ -16,15 +16,31 @@ class View extends Component {
   //                                           timer end function - come back to
   // -------------------------------------------------------------------------- 
 
-    // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   //                                           handle settings toggle
   // --------------------------------------------------------------------------
 
-  handleSettingsToggle() {
+  // this allows for a more robust experience, mobile users can click to expand settings
+  // if user mouses on to settings it will only ever open, mouse off only closes, clicking will toggle
+  handleSettingsToggle(action = 'toggle') {
     const styles = JSON.parse(JSON.stringify(this.props.styles));
-    !styles.settings.maxHeight
+    if (action === 'show') {
+      if (!styles.settings.maxHeight) {
+        styles.settings.maxHeight = '999px'
+      } else {
+        return;
+      }
+    } else if (action === 'hide') {
+      if (!styles.settings.maxHeight) {
+        return;
+      } else {
+        styles.settings.maxHeight = 0;
+      }
+    } else {
+      !styles.settings.maxHeight
       ? styles.settings.maxHeight = '999px'
       : styles.settings.maxHeight = 0;
+    }
     this.props.changeState({styles});
   }
 
@@ -92,8 +108,7 @@ class View extends Component {
         onSampleSound={this.props.onSampleSound}
         showSettings={this.props.showSettings}
         settingsStyle={this.props.styles.settings}
-        onMouseOver={this.handleSettingsToggle}
-        onMouseOut={this.handleSettingsToggle}
+        onSettingsToggle={this.handleSettingsToggle}
       />
 
       <About styles={this.props.styles.about} onAboutToggle={this.handleAboutToggle} />

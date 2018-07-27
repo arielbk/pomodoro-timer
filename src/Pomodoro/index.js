@@ -233,14 +233,10 @@ class Pomodoro extends Component {
     this.setState({ styles });
   }
 
-
   handleSampleSound(timer) {
     const sound = this.state[timer].sound;
     this.refs[sound].play();
   }
-
-
-
 
   changeState(args) {
     this.setState({...args}, () => args.activeTimer ? this.timerStyler() : '');
