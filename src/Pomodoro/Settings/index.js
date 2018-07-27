@@ -14,8 +14,8 @@ class Settings extends Component {
     return (
     <div className="timer-settings" onMouseOver={() => this.props.onSettingsToggle('show')} onMouseOut={() => this.props.onSettingsToggle('hide')}>
 
-      <div className="settings-group settings-work" onClick={this.props.onSettingsToggle}>
-        <div className="timer-title work-title" style={this.props.titleStyles.workTitle}>Work</div>
+      <div className="settings-group settings-work">
+        <div className="timer-title work-title" style={this.props.titleStyles.workTitle} onClick={this.props.onSettingsToggle}>Work</div>
         <div className="timer-settings-content" style={this.props.settingsStyle}>
           <TimeSetter 
             className='settings-timer-work' 
@@ -35,8 +35,8 @@ class Settings extends Component {
         </div>
       </div>
       
-      <div className="settings-group settings-break" onClick={this.props.onSettingsToggle}>
-        <div className="timer-title break-title" style={this.props.titleStyles.breakTitle}>Break</div>
+      <div className="settings-group settings-break">
+        <div className="timer-title break-title" style={this.props.titleStyles.breakTitle}  onClick={this.props.onSettingsToggle}>Break</div>
         <div className="timer-settings-content" style={this.props.settingsStyle}>
           <TimeSetter 
             classname='settings-timer-break' 
@@ -55,8 +55,8 @@ class Settings extends Component {
         </div>
       </div>
 
-      <div className="settings-group settings-long-break" onClick={this.props.onSettingsToggle}>
-        <div className="timer-title long-break-title" style={this.props.titleStyles.longBreakTitle}>Long Break</div>
+      <div className="settings-group settings-long-break">
+        <div className="timer-title long-break-title" style={this.props.titleStyles.longBreakTitle} onClick={this.props.onSettingsToggle}>Long Break</div>
         <div className="timer-settings-content" style={this.props.settingsStyle}>
           <TimeSetter 
             classname='settings-timer-long-break' 
