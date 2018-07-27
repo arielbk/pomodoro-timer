@@ -568,6 +568,7 @@ h1.main-header {
     padding: 1em;
     height: inherit;
     width: 100%;
+    font-size: 1.5em;
   }
 
   .settings-item {
