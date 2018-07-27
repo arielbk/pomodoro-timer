@@ -15,6 +15,7 @@ class Pomodoro extends Component {
       activeTimer: {
         name: 'work',
         timeRemaining: 1500000,
+        duration: 1500000, // so that settings changes does not alter things - freeze timer duration
         paused: true,
         untilTime: 0,
         intervalID: 0,
@@ -115,10 +116,10 @@ class Pomodoro extends Component {
   //                                                                      LIFE CYCLE EVENTS
   // -----------------------------------------------------------------------------------------
   setMouseDown() {
-    this.setState({mouseDown:true});
+    this.setState({ mouseDown:true });
   }
   setMouseUp() {
-    this.setState({mouseDown:false});
+    this.setState({ mouseDown:false });
   }
 
   // keep track of mouse down and mouse up, and any key press
@@ -182,14 +183,15 @@ class Pomodoro extends Component {
     }
 
     activeTimer.name = nextTimer.name;
-    activeTimer.timeRemaining = nextTimer.duration;
+    activeTimer.duration = nextTimer.duration;
+    activeTimer.timeRemaining = activeTimer.duration;
     activeTimer.paused = true;
 
     this.setState({ activeTimer }, this.timerStyler);
   };
 
 
-// --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   //       timer styler - does not really belong here - styled components coming
   // --------------------------------------------------------------------------
 

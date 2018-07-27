@@ -79,6 +79,7 @@ class ButtonProgress extends Component {
     
     activeTimer.name = 'work';
     activeTimer.timeRemaining = duration;
+    activeTimer.duration = duration;
     activeTimer.paused = true;
 
     this.props.changeState({ activeTimer });
@@ -86,7 +87,7 @@ class ButtonProgress extends Component {
 
   progressCircle() {
     const timerName = this.props.activeTimer.name;
-    const duration = this.props[timerName].duration;
+    const duration = this.props.activeTimer.duration;
     const timeRemaining = this.props.activeTimer.timeRemaining;
     const progress = (duration - timeRemaining) / duration;
 
