@@ -1,4 +1,5 @@
 import React from 'react';
+import './css/counters.css';
 
 // displays pomodoros completed and pomodoro goal
 function Counters(props) {

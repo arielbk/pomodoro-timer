@@ -2,6 +2,7 @@
 // play/pause button and circular progress bar component
 
 import React, { Component } from 'react';
+import './css/buttonProgress.css';
 
 class ButtonProgress extends Component {
   constructor(props) {

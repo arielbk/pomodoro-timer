@@ -3,6 +3,7 @@ import GoalSetter from './GoalSetter';
 import LongBreakSetter from './LongBreakSetter';
 import SoundSetter from './SoundSetter';
 import TimeSetter from './TimeSetter';
+import './css/settings.css';
 
 // container and title for timers' settings component
 class Settings extends Component {

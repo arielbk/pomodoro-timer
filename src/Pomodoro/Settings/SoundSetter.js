@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './css/soundSetter.css';
 
 //  settings component - select a sound
 class SoundSetter extends Component {

@@ -1,6 +1,7 @@
 // a click outside of the about box should also close it...
 
 import React, { Component } from 'react';
+import './css/about.css';
 
 class About extends Component {
   render() {

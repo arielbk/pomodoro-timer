@@ -4,6 +4,7 @@ import ShowTime from './ShowTime';
 import Counters from './Counters';
 import Settings from './Settings/index.js';
 import About from './About';
+import './css/view.css';
 
 class View extends Component {
   constructor(props) {
