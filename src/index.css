@@ -55,6 +55,10 @@ h1, h2 {
   text-transform: lowercase;
 }
 
+a {
+  color: var(--lightred);
+}
+
 .noselect {
   /* noselect: https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
   -webkit-user-select: none;

@@ -14,7 +14,7 @@
 
 .sound-prev-arrow,
 .sound-next-arrow {
-  font-size: .8em;
+  font-size: 2rem;
   color: var(--darkgrey);
   transition: color .3s;
 }
