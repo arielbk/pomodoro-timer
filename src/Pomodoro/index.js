@@ -122,14 +122,24 @@ class Pomodoro extends Component {
     this.setState({ mouseDown:false });
   }
 
-  // keep track of mouse down and mouse up, and any key press
+  // keep track of mouse down and mouse up, and any key press, retrieve localhost state, if any
   componentDidMount() {
+    if (localStorage.length > 0) this.setState(JSON.parse(localStorage.getItem('state')));
+
     document.addEventListener('mousedown', this.setMouseDown);
     document.addEventListener('mouseup', this.setMouseUp);
   }
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.setMouseDown);
     document.removeEventListener('mouseup', this.setMouseUp);
+  }
+
+  componentDidUpdate() {
+    const state = {...this.state};
+    // if page is left, timer function will stop so...
+    state.activeTimer.paused = true;
+
+    localStorage.setItem('state', JSON.stringify(state));
   }
 
 
