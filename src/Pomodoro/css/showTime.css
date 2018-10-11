@@ -10,10 +10,12 @@
 }
 
 .seconds-group {
+  display: inline-block;
   margin-left: 10px;
 }
 
 .minutes {
+  display: inline-block;
   font-size: 7.2em;
   letter-spacing: -.05em;
 }

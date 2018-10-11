@@ -1,20 +1,44 @@
 import React from 'react';
 import TimersContext from './TimersContext';
-import './css/counters.css';
+import styled from 'styled-components';
 
 // displays pomodoros completed and pomodoro goal
 export default function Counters() {
   return (
     <TimersContext.Consumer>
       {context => (
-      <div className="counters">
-        <div className="counter-pomodoros">{context.state.pomodoros}</div>
-        <div className="counter-group">
-          <div className="counter-goal">of <span>{context.state.goal}</span></div>
-          <div className="counter-text">pomodoros<br /> completed</div>
-        </div>
-      </div>
+      <span>
+        <Pomodoros>{context.state.pomodoros}</Pomodoros>
+        <Group>
+          <Goal>of {context.state.goal}</Goal>
+          <Text>pomodoros<br /> completed</Text>
+        </Group>
+      </span>
       )}
     </TimersContext.Consumer>
   )
 }
+
+const Pomodoros = styled.div`
+  display: inline-block;
+  font-size: 6em;
+  color: #999;
+  font-weight: 200;
+  letter-spacing: -.05em;
+`;
+
+const Group = styled.div`
+  display: inline-block;
+  margin-left: 10px;
+`;
+
+const Goal = styled.div`
+  font-size: 2.5em;
+  text-align: right;
+  color: var(--medgrey);
+`;
+
+const Text = styled.div`
+  font-size: .9em;
+  text-align: right;
+`;

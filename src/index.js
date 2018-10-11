@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
+import Pomodoro from './Pomodoro';
+import './global.css';
 import './media-queries.css';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Pomodoro />, document.getElementById('root'));
 registerServiceWorker();

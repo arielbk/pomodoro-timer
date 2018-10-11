@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TimersContext from './TimersContext';
-import './css/showTime.css';
+import styled from 'styled-components';
 
 // displays the timer's current time formatted
 class ShowTime extends Component {
@@ -23,13 +23,13 @@ class ShowTime extends Component {
 
     document.title = `${mins}:${secs} - pomodoro timer`;
     return (
-    <div className="show-time">
-      <div className="minutes" style={this.props.font}>{mins}</div>
-      <div className="seconds-group">
-        <div className="seconds">{secs}</div>
-        <div className="milliseconds">{msecs}</div>
-      </div>
-    </div>
+    <span>
+      <Minutes>{mins}</Minutes>
+      <Group>
+        <Seconds>{secs}</Seconds>
+        <Milliseconds>{msecs}</Milliseconds>
+      </Group>
+    </span>
   )}
 }
 
@@ -40,3 +40,26 @@ const WithContext = () => (
 )
 
 export default WithContext;
+
+// this needs to change depending on the timer we are on... COLOUR!
+const Minutes = styled.div`
+  display: inline-block;
+  font-size: 7.2em;
+  letter-spacing: -.05em;
+`;
+
+const Group = styled.div`
+  display: inline-block;
+  margin-left: 10px;
+`;
+
+const Seconds = styled.div`
+  font-size: 3.2em;;
+  color: #999;
+  text-align: right;
+`;
+
+const Milliseconds = styled.div`
+  font-size: 1.6em;
+  text-align: right;
+`;

@@ -33,16 +33,6 @@ body {
   color: var(--medgrey);
 }
 
-.app {
-  position: relative;
-  max-width: 940px;
-  background: var(--darkgrey);
-  box-shadow: 0 12px 50px rgba(0,0,0,.6);
-  border-radius: 5px;
-  margin: 30px auto 60px auto;
-  padding: 40px 60px 80px 60px;
-}
-
 h1, h2 {
   font-family: 'Rubik', sans-serif;
   font-weight: 700;

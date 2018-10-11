@@ -6,15 +6,10 @@ import ShowTime from './ShowTime';
 import Counters from './Counters';
 import Settings from './Settings/index.js';
 import About from './About';
-import './css/view.css';
+
+import styled from 'styled-components';
 
 class View extends Component {
-  constructor(props) {
-    super(props);
-    this.handleSettingsToggle = this.handleSettingsToggle.bind(this);
-    this.handleAboutToggle = this.handleAboutToggle.bind(this);    
-  }
-
   // --------------------------------------------------------------------------
   //                                           handle settings toggle
   // --------------------------------------------------------------------------
@@ -66,24 +61,55 @@ class View extends Component {
   render() {
     return (
       <TimersProvider>
-    <div className="app">  
-      <h1 className="main-header">Pomodoro Timer</h1>
-      <div className="top-divider"></div>
+        <App>
+          <MainHeader>Pomodoro Timer</MainHeader>
+          <TopDivider />
+          <MainContent>
 
-      <div className="main-content">
-        <ButtonProgress />
-        <ShowTime />
-        <Counters />
-      </div>
-    
-      <Settings
-        onSettingsToggle={this.handleSettingsToggle}
-      />
+            {/* actual (non-styled) components */}
+            <ButtonProgress />
+            <ShowTime />
+            <Counters />
 
-      <About onAboutToggle={this.handleAboutToggle} />
+          </MainContent>
 
-    </div>
-    </TimersProvider>
+            {/* actual (non-styled) components */}
+          <Settings onSettingsToggle={this.handleSettingsToggle} />
+          <About onAboutToggle={this.handleAboutToggle} />
+
+        </App>
+      </TimersProvider>
   )}
 }
 export default View;
+
+const App = styled.div`
+  position: relative;
+  max-width: 940px;
+  background: var(--darkgrey);
+  box-shadow: 0 12px 50px rgba(0,0,0,.6);
+  border-radius: 5px;
+  margin: 30px auto 60px auto;
+  padding: 40px 60px 80px 60px;
+`;
+
+const MainHeader = styled.div`
+  font-size: 3.6em;
+  text-align: center;
+  margin: 0;
+`;
+
+const TopDivider = styled.div`
+  height: 5px;
+  width: 100%;
+  background: var(--medgrey);
+  border-radius: 5px;
+  margin: 20px 0;
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 60px 0 40px 0;
+`;
