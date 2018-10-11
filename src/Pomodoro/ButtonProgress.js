@@ -1,95 +1,45 @@
-// this could be split into some sub-components
-// play/pause button and circular progress bar component
+// This component is passed state via a Context HOC (bottom)
+// Context is accessed via props
+// This should be a common HOC for reuse, still haven't figured it out completely
+// And this still seems relatively clean...
 
 import React, { Component } from 'react';
 import './css/buttonProgress.css';
+import TimersContext from './TimersContext';
 
 class ButtonProgress extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.progressCircle = this.progressCircle.bind(this);
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-  }
-
-  handleKeyPress(e) {
+  handleKeyPress = (e) => {
     if (e.key === ' ') {
-      this.handlePlayPause();
+      this.props.context.handlePlayPause();
     } else if (e.key === 'Escape') {
-      this.handleReset();
+      this.props.context.handleReset();
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.circle = this.refs.circle.getContext('2d');
-
     this.startPoint = 4.72;
-
     this.cw = this.circle.canvas.width;
     this.ch = this.circle.canvas.height;
-
     // optimised animation
     requestAnimationFrame(this.progressCircle);
 
-    document.addEventListener('keyup', this.handleKeyPress);
+    document.addEventListener('keyup', this.props.context.handleKeyPress);
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleKeyPress);
+  componentWillUnmount = () => {
+    document.removeEventListener('keyup', this.props.context.handleKeyPress);
   }
 
-  componentDidUpdate(){
+  componentDidUpdate = () => {
     requestAnimationFrame(this.progressCircle);
   }
 
-  // --------------------------------------------------------------------------
-  //                                           play/pause timer
-  // --------------------------------------------------------------------------
-
-  handlePlayPause() {
-    let timer = this.props.activeTimer;
-
-    // pause or play the timer depending on current state
-    if (timer.paused) {
-      timer.untilTime = Date.now() + this.props.activeTimer.timeRemaining;
-      timer.intervalID = setInterval(() => this.props.timerFunc(), 50);
-      this.props.changeState({ activeTimer: timer });
-    } else {
-      clearInterval(timer.intervalID);
-    }
-
-    timer.paused = !timer.paused;
-
-    this.props.changeState({activeTimer: timer})
-  }
-
-  // --------------------------------------------------------------------------
-  //                                           handle reset
-  // --------------------------------------------------------------------------
-
-  // default back to work timer
-  handleReset() {
-    const activeTimer = {...this.props.activeTimer};
-
-    // end any running timer function
-    clearInterval(activeTimer.intervalID);
-
-    const duration = this.props.work.duration;
-    
-    activeTimer.name = 'work';
-    activeTimer.timeRemaining = duration;
-    activeTimer.duration = duration;
-    activeTimer.paused = true;
-
-    this.props.changeState({ activeTimer });
-  }
-
-  progressCircle() {
-    const timerName = this.props.activeTimer.name;
-    const duration = this.props.activeTimer.duration;
-    const timeRemaining = this.props.activeTimer.timeRemaining;
+  progressCircle = () => {
+    const activeTimer = this.props.context.state.activeTimer;
+    const timerName = activeTimer.name;
+    const duration = activeTimer.duration;
+    const timeRemaining = activeTimer.timeRemaining;
     const progress = (duration - timeRemaining) / duration;
 
     let endPoint = ((progress) * Math.PI * 2);
@@ -112,20 +62,25 @@ class ButtonProgress extends Component {
 
   render() {
       return (
-    <div className="buttons-container">  
-      <div className="reset-button noselect" onClick={this.handleReset}>✕</div>
-      <div 
-        className="button-progress"
-        style={this.props.styles.background}
-      >
-        <div className="button-progress-inner">
-          <i className={this.props.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'} style={this.props.styles.font}></i>
+      <div className="buttons-container">  
+        <div className="reset-button noselect" onClick={this.props.context.handleReset}>✕</div>
+        <div 
+          className="button-progress"
+        >
+          <div className="button-progress-inner">
+            <i className={this.props.context.state.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'}></i>
+          </div>
         </div>
+        <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.props.context.handlePlayPause}/>
       </div>
-      <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.handlePlayPause}/>
-    </div>
     );
   }
 }
 
-export default ButtonProgress;
+const WithContext = () => (
+  <TimersContext.Consumer>
+    {context => <ButtonProgress context={context} />}
+  </TimersContext.Consumer>
+)
+
+export default WithContext;

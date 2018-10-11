@@ -1,17 +1,20 @@
 import React from 'react';
+import TimersContext from './TimersContext';
 import './css/counters.css';
 
 // displays pomodoros completed and pomodoro goal
-function Counters(props) {
+export default function Counters() {
   return (
-    <div className="counters">
-      <div className="counter-pomodoros">{props.pomodoros}</div>
-      <div className="counter-group">
-        <div className="counter-goal">of <span editable="true">{props.goal}</span></div>
-        <div className="counter-text">pomodoros<br /> completed</div>
+    <TimersContext.Consumer>
+      {context => (
+      <div className="counters">
+        <div className="counter-pomodoros">{context.state.pomodoros}</div>
+        <div className="counter-group">
+          <div className="counter-goal">of <span>{context.state.goal}</span></div>
+          <div className="counter-text">pomodoros<br /> completed</div>
+        </div>
       </div>
-    </div>
+      )}
+    </TimersContext.Consumer>
   )
 }
-
-export default Counters;
