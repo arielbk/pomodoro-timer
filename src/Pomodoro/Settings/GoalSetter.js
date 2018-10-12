@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TimersContext from '../TimersContext';
+import styled from 'styled-components';
+import { SettingsItem, IncrementDecrement } from './index';
 
 // settings component - set a pomodoro goal
 export default class GoalSetter extends Component {
@@ -7,11 +9,17 @@ export default class GoalSetter extends Component {
     return (
       <TimersContext.Consumer>
         {context => (
-          <div className='settings-item settings-goal'>
-              <a className='decrement noselect' onMouseDown={() => context.handleGoalChange(-1)}>–</a>
-              <div className='settings-goal-show'>Goal : {context.state.goal}</div>
-              <a className='increment noselect' onMouseDown={() => context.handleGoalChange(+1)}>+</a>
-            </div>
+          <SettingsItem>
+            <IncrementDecrement 
+              timer="work" 
+              onMouseDown={() => context.handleGoalChange(-1)}
+              >–</IncrementDecrement>
+            <div className='settings-goal-show'>Goal : {context.state.goal}</div>
+            <IncrementDecrement 
+              timer="work" 
+              onMouseDown={() => context.handleGoalChange(+1)}
+              >+</IncrementDecrement>
+          </SettingsItem>
         )}
       </TimersContext.Consumer>
     )

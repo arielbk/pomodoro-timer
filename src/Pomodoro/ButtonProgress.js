@@ -112,7 +112,7 @@ const ResetButton = styled.div`
   font-weight: 900;
 
   &:hover {
-    color: var(--lightred);
+    color: var(--light-work);
     cursor: pointer;
   }
 `;
@@ -139,7 +139,7 @@ const ButtonProgressInner = styled.div`
   justify-content: center;
 
   background: var(--darkgrey);
-  color: var(--lightred);
+  color: var(--light-work);
   width: 106px;
   height: 106px;
   border-radius: 100%;

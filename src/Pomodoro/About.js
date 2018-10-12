@@ -57,7 +57,7 @@ const CloseButton = styled.div`
   font-size: 2em;
 
   &:hover {
-    color: var(--lightred);
+    color: var(--light-work);
     cursor: pointer;
   }
 `;

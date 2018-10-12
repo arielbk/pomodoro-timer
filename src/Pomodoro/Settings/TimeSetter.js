@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TimersContext from '../TimersContext';
+import { SettingsItem, IncrementDecrement } from './index';
 
 // settings component - set a time
 export default class TimeSetter extends Component {
@@ -7,11 +8,21 @@ export default class TimeSetter extends Component {
     return (
       <TimersContext.Consumer>
         {context => (
-          <div className={`settings-item settings-timer-${this.props.timerName}`} >
-            <a className='decrement noselect' onMouseDown={() => context.handleDurationChange(-1)}>–</a>
-            <div className='settings-timer-show'>{Math.floor(context.state[this.props.timerName].duration / 60 / 1000)} min</div>
-            <a className='increment noselect' onMouseDown={() => context.handleDurationChange(+1)}>+</a>
-          </div>
+          <SettingsItem>
+            <IncrementDecrement 
+              timer={this.props.timerName} 
+              onMouseDown={() => context.handleDurationChange(-1)}>
+              –
+            </IncrementDecrement>
+              
+              <div>{Math.floor(context.state[this.props.timerName].duration / 60 / 1000)} min</div>
+            
+            <IncrementDecrement 
+              timer={this.props.timerName} 
+              onMouseDown={() => context.handleDurationChange(+1)}>
+              +
+            </IncrementDecrement>
+          </SettingsItem>
         )}
       </TimersContext.Consumer>
     );

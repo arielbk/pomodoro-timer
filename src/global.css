@@ -10,14 +10,16 @@
   --medgrey: #3b3b3b;
   --darkgrey: #202020;
 
-  --lightred: #cf4547;
-  --darkred: #50191a;
+  --light-work: #cf4547;
+  --dark-work: #50191a;
 
-  --lightgreen: #8df37a;
-  --darkgreen: #214a19;
+  --light-break: #e2d34e;
+  --dark-break: #836f40;
 
-  --lightorange: #e2d34e;
-  --darkorange: #836f40;
+  --light-longBreak: #8df37a;
+  --dark-longBreak: #214a19;
+
+
 }
 
 *, *::before, *::after {
