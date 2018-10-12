@@ -23,13 +23,13 @@ class ShowTime extends Component {
 
     document.title = `${mins}:${secs} - pomodoro timer`;
     return (
-    <span>
+    <Container>
       <Minutes timer={this.props.context.state.activeTimer.name}>{mins}</Minutes>
       <Group>
         <Seconds timer={this.props.context.state.activeTimer.name}>{secs}</Seconds>
         <Milliseconds>{msecs}</Milliseconds>
       </Group>
-    </span>
+    </Container>
   )}
 }
 
@@ -41,12 +41,15 @@ const WithContext = () => (
 
 export default WithContext;
 
+const Container = styled.span`
+  // font-family: 'Rubik';
+`;
+
 // this needs to change depending on the timer we are on... COLOUR!
 const Minutes = styled.div`
   display: inline-block;
   font-size: 7.2em;
   letter-spacing: -.05em;
-
   color: var(--light-${props => props.timer});
 `;
 

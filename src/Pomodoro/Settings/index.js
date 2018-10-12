@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TimersContext from '../TimersContext';
 import GoalSetter from './GoalSetter';
 import LongBreakSetter from './LongBreakSetter';
 import SoundSetter from './SoundSetter';
@@ -11,12 +10,7 @@ import styled from 'styled-components';
 export default class Settings extends Component {
   render() {
     return (
-      <TimersContext>
-        {context => (
-          <Container 
-            onMouseOver={() => this.props.onSettingsToggle('show')} 
-            onMouseOut={() => this.props.onSettingsToggle('hide')}
-          >
+          <Container>
 
             <Group timer="work">
               <Title timer="work" onClick={this.props.onSettingsToggle}>Work</Title>
@@ -45,8 +39,6 @@ export default class Settings extends Component {
             </Group> 
 
           </Container>
-        )}
-    </TimersContext>
   )}
 }
 

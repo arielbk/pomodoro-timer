@@ -131,6 +131,8 @@ const StyledButtonProgress = styled.div`
   &:hover {
     cursor: pointer;
   }
+
+  background: var(--dark-work)
 `;
 
 const ButtonProgressInner = styled.div`

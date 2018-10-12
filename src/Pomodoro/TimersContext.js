@@ -58,25 +58,32 @@ export class TimersProvider extends Component {
         duration: 900000, // mseconds - 15 min default
         sound: 'Winning'
       },
+    }
+
+    // --------------------------------------------------------------------------
+    //                         mouse down/up lifecycle events
+    // --------------------------------------------------------------------------
+  
+    setMouseDown = () => {
+      this.setState({ mouseDown: true })
+    }
+    setMouseUp = () => {
+      this.setState({ mouseDown: false })
+    }
+
+  componentDidMount = () => {
+    document.addEventListener('mousedown', this.setMouseDown);
+    document.addEventListener('mouseup', this.setMouseUp);
   }
 
+  componentWillUnmount = () => {
+    document.removeEventListener('mousedown', this.setMouseDown);
+    document.removeEventListener('mouseup', this.setMouseUp);
+  }
 
   // --------------------------------------------------------------------------
   //                                           FUNCTIONS
   // --------------------------------------------------------------------------
-
-
-
-  // --------------------------------------------------------------------------
-  //                                           mouse down/up
-  // --------------------------------------------------------------------------
-
-  setMouseDown = () => {
-    this.setState({ mouseDown: true })
-  }
-  setMouseUp = () => {
-    this.setState({ mouseDown: false })
-  }
 
   // --------------------------------------------------------------------------
   //                                        play sound

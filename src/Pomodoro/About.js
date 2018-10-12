@@ -5,7 +5,6 @@ export default class About extends Component {
   render() {
     return (
       <Fragment>
-        <AboutToggle onClick={this.props.onAboutToggle}>about</AboutToggle>
         <AboutPomodoro>
           <p>The Pomodoro Technique is a tool for time management and productivity.</p>
           <p>Work for one 'pomodoro' (one set interval — usually 25 minutes) and then have a short break. After 4 of these, go and have a long break. It's simple and effective for flow, focus and productivity.</p>
@@ -19,22 +18,6 @@ export default class About extends Component {
   }
 }
 
-const AboutToggle = styled.div`
-  position: absolute;
-  top: 1.5em;
-  right: 2em;
-  background: var(--lightgrey);
-  color: var(--darkgrey);
-  padding: .2em;
-  border-radius: 6px;
-  opacity: .2;
-
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-  }
-`;
-
 const AboutPomodoro = styled.div`
   position: absolute;
   top: 6em;
@@ -43,8 +26,6 @@ const AboutPomodoro = styled.div`
   background: var(--lightgrey);
   color: var(--darkgrey);
   border-radius: 6px;
-  max-height: 0;
-  overflow: hidden;
   opacity: .9;
 
   transition: .4s;
