@@ -24,9 +24,9 @@ class ShowTime extends Component {
     document.title = `${mins}:${secs} - pomodoro timer`;
     return (
     <span>
-      <Minutes>{mins}</Minutes>
+      <Minutes timer={this.props.context.state.activeTimer.name}>{mins}</Minutes>
       <Group>
-        <Seconds>{secs}</Seconds>
+        <Seconds timer={this.props.context.state.activeTimer.name}>{secs}</Seconds>
         <Milliseconds>{msecs}</Milliseconds>
       </Group>
     </span>
@@ -46,6 +46,8 @@ const Minutes = styled.div`
   display: inline-block;
   font-size: 7.2em;
   letter-spacing: -.05em;
+
+  color: var(--light-${props => props.timer});
 `;
 
 const Group = styled.div`

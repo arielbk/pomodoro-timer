@@ -11,7 +11,7 @@ export default class TimeSetter extends Component {
           <SettingsItem>
             <IncrementDecrement 
               timer={this.props.timerName} 
-              onMouseDown={() => context.handleDurationChange(-1)}>
+              onMouseDown={() => context.handleDurationChange(this.props.timerName, -1)}>
               –
             </IncrementDecrement>
               
@@ -19,7 +19,7 @@ export default class TimeSetter extends Component {
             
             <IncrementDecrement 
               timer={this.props.timerName} 
-              onMouseDown={() => context.handleDurationChange(+1)}>
+              onMouseDown={() => context.handleDurationChange(this.props.timerName, 1)}>
               +
             </IncrementDecrement>
           </SettingsItem>

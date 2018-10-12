@@ -36,7 +36,6 @@ class View extends Component {
     //   : styles.settings.maxHeight = 0;
     // }
     // this.props.changeState({styles});
-    console.log('trying to change up the settings sections');
   }
 
   // --------------------------------------------------------------------------
@@ -55,7 +54,6 @@ class View extends Component {
     //   styles.about.padding = '0 2em';
     // }
     // this.props.changeState({styles});
-    console.log('trying to toggle the about sections!');
   }
 
   render() {
@@ -93,7 +91,7 @@ const App = styled.div`
   padding: 40px 60px 80px 60px;
 `;
 
-const MainHeader = styled.div`
+const MainHeader = styled.h1`
   font-size: 3.6em;
   text-align: center;
   margin: 0;

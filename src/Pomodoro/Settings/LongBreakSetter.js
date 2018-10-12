@@ -13,7 +13,7 @@ export default class LongBreakSetter extends Component {
               timer="longBreak"
               onMouseDown={() => context.handleSetChange(-1)}
               >–</IncrementDecrement>
-            <div>Every {context.pomodoroSet}</div>
+            <div>Every {context.state.pomodoroSet}</div>
             <IncrementDecrement 
               timer="longBreak"
               onMouseDown={() => context.handleSetChange(+1)}

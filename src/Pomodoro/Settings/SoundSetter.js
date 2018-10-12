@@ -29,7 +29,7 @@ export default class SoundSetter extends Component {
                 return (
                 <li key={`${sound}`}
                   hidden={sound === context.state[this.props.timerName].sound ? false : true}>
-                  <SoundIcon onClick={() => context.onSampleSound(this.props.timerName)}>
+                  <SoundIcon onClick={() => context.playSound(sound)}>
                     <i className="fas fa-volume-up"></i>
                   </SoundIcon>
                   {sound}
@@ -45,7 +45,7 @@ export default class SoundSetter extends Component {
               if (newIndex === context.state.sounds.length - 1 ) { newIndex = 0; }
               else { newIndex++ }
       
-              context.handleSoundSelect(context.state.sounds[newIndex]);
+              context.handleSoundSelect(this.props.timerName, context.state.sounds[newIndex]);
               }}>&gt;
             </Arrow>
 

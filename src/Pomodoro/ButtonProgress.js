@@ -69,7 +69,7 @@ class ButtonProgress extends Component {
         <ResetButton onClick={this.props.context.handleReset}>✕</ResetButton>
 
         <StyledButtonProgress>
-          <ButtonProgressInner>
+          <ButtonProgressInner timer={this.props.context.state.activeTimer.name}>
             <i 
               className={this.props.context.state.activeTimer.paused 
                 ? 'fas fa-play' 
@@ -139,7 +139,7 @@ const ButtonProgressInner = styled.div`
   justify-content: center;
 
   background: var(--darkgrey);
-  color: var(--light-work);
+  color: var(--light-${props => props.timer});
   width: 106px;
   height: 106px;
   border-radius: 100%;

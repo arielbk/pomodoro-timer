@@ -171,8 +171,7 @@ class Pomodoro extends Component {
     timer.timeRemaining = Math.round(timer.untilTime - Date.now());
 
     // set new state
-    this.setState({ activeTimer: timer }) 
-    console.log(timer.timeRemaining);
+    this.setState({ activeTimer: timer });
   }
 
   // --------------------------------------------------------------------------
