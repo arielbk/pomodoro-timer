@@ -34,7 +34,9 @@ class View extends Component {
           <Toggle>
             {({on, toggle}) => (
               <Fragment>
-                <AboutToggle onClick={toggle}>About</AboutToggle>
+                <AboutToggle onClick={toggle}>
+                  <i className="fas fa-question" />
+                </AboutToggle>
                 <Modal toggle={toggle} on={on} from='left'>
                   <About />
                 </Modal>
@@ -45,7 +47,9 @@ class View extends Component {
           <Toggle>
             {({on, toggle}) => (
               <Fragment>
-                <SettingsToggle onClick={toggle}>Settings</SettingsToggle>
+                <SettingsToggle onClick={toggle}>
+                <i className="fas fa-cog" />
+                </SettingsToggle>
                 <Modal toggle={toggle} on={on} from='right'>
                   <Settings />
                 </Modal>
@@ -70,6 +74,11 @@ const App = styled.div`
   border-radius: 5px;
   margin: 30px auto 60px auto;
   padding: 40px 60px 80px 60px;
+
+  @media (max-width: 780px) {
+    margin: 0;
+    padding: 20px 25px 40px 25px;
+  }
 `;
 
 const MainHeader = styled.h1`
@@ -91,36 +100,39 @@ const MainContent = styled.div`
   justify-content: space-around;
   align-items: center;
   margin: 60px 0;
+
+  @media (max-width: 700px) {
+    flex-wrap: wrap;
+    margin: 50px 0 40px 0;
+  }
 `;
 
-const AboutToggle = styled.div`
+const StyledToggle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   position: absolute;
   top: 1.5em;
+  background: var(--medgrey);
+  color: var(--darkgrey);
+  padding: .2em;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--lightgrey);
+  }
+
+  i {
+    font-size: 2rem;
+  }
+`;
+const AboutToggle = styled(StyledToggle)`
   left: 2em;
-  background: var(--lightgrey);
-  color: var(--darkgrey);
-  padding: .2em;
-  border-radius: 6px;
-  opacity: .2;
-
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-  }
 `;
-
-const SettingsToggle = styled.div`
-  position: absolute;
-  top: 1.5em;
+const SettingsToggle = styled(StyledToggle)`
   right: 2em;
-  background: var(--lightgrey);
-  color: var(--darkgrey);
-  padding: .2em;
-  border-radius: 6px;
-  opacity: .2;
-
-  &:hover {
-    cursor: pointer;
-    opacity: 1;
-  }
 `;

@@ -52,3 +52,9 @@ a {
   -ms-user-select: none;
   user-select: none;
 }
+
+@media (max-width: 780px) {
+  body {
+    font-size: 15px;
+  }
+}

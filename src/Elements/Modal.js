@@ -10,18 +10,19 @@ export default class Modal extends Component {
     return (
       <Portal>
         <Transition
-          
+          native
           config={config.gentle}
-          from={{ opacity: 0, x: `${from === 'left' ? '-' : ''}400` }}
+          from={{ opacity: 0, x: `${from === 'left' ? '-' : ''}300` }}
           enter={{ opacity: 1, x: '0' }}
-          leave={{ opacity: 0, x: `${from === 'left' ? '-' : ''}400` }}
+          leave={{ opacity: 0, x: `${from === 'left' ? '-' : ''}300` }}
         >
         {on && (styles => (
           <ModalWrapper>
             <ModalContent
               style={{
-                transform: `translate3d(${Math.floor(styles.x)}px, 0, 0)`,
-                opacity: styles.opacity
+                transform: styles.x.interpolate(x => `translate3d(${Math.floor(x)}px, 0, 0)`),
+                opacity: styles.opacity,
+                ...styles
               }}
             >
               { children }
