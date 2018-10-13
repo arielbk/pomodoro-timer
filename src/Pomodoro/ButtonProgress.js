@@ -31,10 +31,11 @@ class ButtonProgress extends Component {
   }
 
   progressCircle = () => {
-    // HTML canvas is not my thing for now and I want to understand what I'm doing full
+    // HTML canvas is not my thing for now and I want to understand what I'm doing fully
     // TODO -- implement in pure CSS!
     // this looks like a great article: https://css-tricks.com/building-progress-ring-quickly/
     return null
+
     // this.cw = this.circle.canvas.width;
     // this.ch = this.circle.canvas.height;
     // this.startPoint = 4.72;
@@ -68,7 +69,7 @@ class ButtonProgress extends Component {
       <ButtonsContainer>  
         <ResetButton onClick={this.props.context.handleReset}>✕</ResetButton>
 
-        <StyledButtonProgress>
+        <StyledButtonProgress timer={this.props.context.state.activeTimer.name}>
           <ButtonProgressInner timer={this.props.context.state.activeTimer.name}>
             <i 
               className={this.props.context.state.activeTimer.paused 
@@ -132,7 +133,7 @@ const StyledButtonProgress = styled.div`
     cursor: pointer;
   }
 
-  background: var(--dark-work)
+  background: var(--dark-${props => props.timer})
 `;
 
 const ButtonProgressInner = styled.div`

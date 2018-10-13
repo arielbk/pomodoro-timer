@@ -1,5 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { TimersProvider } from './TimersContext';
+
+import Toggle from '../Utilities/Toggle';
+import Modal from '../Elements/Modal';
 
 import ButtonProgress from './ButtonProgress';
 import ShowTime from './ShowTime';
@@ -11,19 +14,6 @@ import Titles from './Titles';
 import styled from 'styled-components';
 
 class View extends Component {
-  state = {
-    showAbout: false,
-    showSettings: false,
-  }
-
-  handleSettingsToggle = () => {
-    this.setState({ showSettings: !this.state.showSettings })
-  }
-
-  handleAboutToggle = () => {
-    this.setState({ showAbout: !this.state.showAbout })
-  }
-
   render() {
     return (
       <TimersProvider>
@@ -41,11 +31,30 @@ class View extends Component {
 
           <Titles />
 
-          <AboutToggle onClick={this.handleAboutToggle}>About</AboutToggle>
-            {this.state.showAbout && <About />}
+          <Toggle>
+            {({on, toggle}) => (
+              <Fragment>
+                <AboutToggle onClick={toggle}>About</AboutToggle>
+                <Modal toggle={toggle} on={on}>
+                  <About />
+                </Modal>
+              </Fragment>
+            )}
+          </Toggle>
 
-          <SettingsToggle onClick={this.handleSettingsToggle}>Settings</SettingsToggle>
-            {this.state.showSettings && <Settings />}
+          <Toggle>
+            {({on, toggle}) => (
+              <Fragment>
+                <SettingsToggle onClick={toggle}>Settings</SettingsToggle>
+                <Modal toggle={toggle} on={on}>
+                  <Settings />
+                </Modal>
+              </Fragment>
+            )}
+          </Toggle>
+
+          {/* <SettingsToggle onClick={this.handleSettingsToggle}>Settings</SettingsToggle>
+            {this.state.showSettings && <Settings />} */}
 
         </App>
       </TimersProvider>
@@ -72,7 +81,7 @@ const MainHeader = styled.h1`
 const Divider = styled.div`
   height: 5px;
   width: 100%;
-  background: var(--faintgrey);
+  background: var(--medgrey);
   border-radius: 5px;
   margin: 20px 0;
 `;

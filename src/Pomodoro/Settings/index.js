@@ -10,42 +10,48 @@ import styled from 'styled-components';
 export default class Settings extends Component {
   render() {
     return (
-          <Container>
+      <Container>
 
-            <Group timer="work">
-              <Title timer="work" onClick={this.props.onSettingsToggle}>Work</Title>
-              <Content>
-                <TimeSetter timerName="work" />
-                <SoundSetter timerName="work" />
-                <GoalSetter timerName="work" />
-              </Content>
-            </Group>
-            
-            <Group timer="break">
-              <Title timer="break" onClick={this.props.onSettingsToggle}>Break</Title>
-              <Content>
-                <TimeSetter timerName="break" />
-                <SoundSetter timerName="break" />
-              </Content>
-            </Group>
+        <Group timer="work">
+          <Title timer="work" onClick={this.props.onSettingsToggle}>Work</Title>
+          <Content>
+            <TimeSetter timerName="work" />
+            <SoundSetter timerName="work" />
+            <GoalSetter timerName="work" />
+          </Content>
+        </Group>
+        
+        <Group timer="break">
+          <Title timer="break" onClick={this.props.onSettingsToggle}>Break</Title>
+          <Content>
+            <TimeSetter timerName="break" />
+            <SoundSetter timerName="break" />
+          </Content>
+        </Group>
 
-            <Group timer="longBreak">
-              <Title timer="longBreak" onClick={this.props.onSettingsToggle}>Long Break</Title>
-              <Content>
-                <TimeSetter timerName="longBreak" />
-                <SoundSetter timerName="longBreak" />
-                <LongBreakSetter timerName="longBreak" />
-              </Content>
-            </Group> 
+        <Group timer="longBreak">
+          <Title timer="longBreak" onClick={this.props.onSettingsToggle}>Long Break</Title>
+          <Content>
+            <TimeSetter timerName="longBreak" />
+            <SoundSetter timerName="longBreak" />
+            <LongBreakSetter timerName="longBreak" />
+          </Content>
+        </Group> 
 
-          </Container>
+      </Container>
   )}
 }
-
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: flex-start;
+  width: 800px;
+
+  color: var(--darkgrey);
+  border-radius: 6px;
+  opacity: .9;
+
+  transition: .4s;
 `;
 
 const Title = styled.div`
@@ -56,14 +62,9 @@ const Title = styled.div`
   height: 45px;
   text-align: center;
   padding: .4em;
-  border-bottom: 6px solid var(--medgrey);
+  border-bottom: 6px solid var(--dark-${props => props.timer});
+  color: var(--medgrey);
   position: relative;
-
-  &::after {
-    content: '▾';
-    position: absolute;
-    right: 1em;
-  }
 `;
 
 const Group = styled.div`
@@ -104,7 +105,6 @@ const IncrementDecrement = styled.a`
   background: transparent;
   font-weight: 100;
   font-size: 2rem;
-  color: var(--darkgrey);
 
   &:hover {
     cursor: pointer;
