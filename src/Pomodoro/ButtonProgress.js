@@ -1,131 +1,166 @@
-// this could be split into some sub-components
-// play/pause button and circular progress bar component
+// This component is passed state via a Context HOC (bottom)
+// Context is accessed via props
+// This should be a common HOC for reuse, still haven't figured it out completely
+// And this still seems relatively clean...
 
 import React, { Component } from 'react';
-import './css/buttonProgress.css';
+import styled from 'styled-components';
+import TimersContext from './TimersContext';
 
 class ButtonProgress extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.progressCircle = this.progressCircle.bind(this);
-    this.handlePlayPause = this.handlePlayPause.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-  }
-
-  handleKeyPress(e) {
+  handleKeyPress = (e) => {
     if (e.key === ' ') {
-      this.handlePlayPause();
+      this.props.context.handlePlayPause();
     } else if (e.key === 'Escape') {
-      this.handleReset();
+      this.props.context.handleReset();
     }
   }
 
-  componentDidMount() {
-    this.circle = this.refs.circle.getContext('2d');
+  componentDidMount = () => {
+    // this.circle = this.circle.getContext('2d');
 
-    this.startPoint = 4.72;
-
-    this.cw = this.circle.canvas.width;
-    this.ch = this.circle.canvas.height;
-
-    // optimised animation
-    requestAnimationFrame(this.progressCircle);
-
-    document.addEventListener('keyup', this.handleKeyPress);
+    document.addEventListener('keyup', this.props.context.handleKeyPress);
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleKeyPress);
+  componentWillUnmount = () => {
+    document.removeEventListener('keyup', this.props.context.handleKeyPress);
   }
 
-  componentDidUpdate(){
-    requestAnimationFrame(this.progressCircle);
+  componentDidUpdate = () => {
+    // requestAnimationFrame(this.progressCircle);
   }
 
-  // --------------------------------------------------------------------------
-  //                                           play/pause timer
-  // --------------------------------------------------------------------------
+  progressCircle = () => {
+    // HTML canvas is not my thing for now and I want to understand what I'm doing fully
+    // TODO -- implement in pure CSS!
+    // this looks like a great article: https://css-tricks.com/building-progress-ring-quickly/
+    return null
 
-  handlePlayPause() {
-    let timer = this.props.activeTimer;
+    // this.cw = this.circle.canvas.width;
+    // this.ch = this.circle.canvas.height;
+    // this.startPoint = 4.72;
 
-    // pause or play the timer depending on current state
-    if (timer.paused) {
-      timer.untilTime = Date.now() + this.props.activeTimer.timeRemaining;
-      timer.intervalID = setInterval(() => this.props.timerFunc(), 50);
-      this.props.changeState({ activeTimer: timer });
-    } else {
-      clearInterval(timer.intervalID);
-    }
+    // const activeTimer = this.props.context.state.activeTimer;
+    // const timerName = activeTimer.name;
+    // const duration = activeTimer.duration;
+    // const timeRemaining = activeTimer.timeRemaining;
+    // const progress = (duration - timeRemaining) / duration;
 
-    timer.paused = !timer.paused;
+    // let endPoint = ((progress) * Math.PI * 2);
+    // this.circle.clearRect(0,0,this.cw,this.ch); // clear canvas every time function is called
 
-    this.props.changeState({activeTimer: timer})
-  }
+    // this.circle.lineWidth = 22; // stroke size
+    // if (timerName === 'work') {
+    //   this.circle.strokeStyle = '#cf4547'; // var(--lightred)
+    // } else if (timerName === 'break') {
+    //   this.circle.strokeStyle = '#e2d34e'; // var(--lightorange)
+    // } else if (timerName === 'longBreak') {
+    //   this.circle.strokeStyle = '#8df37a'; // var(--lightgreen)
+    // }
 
-  // --------------------------------------------------------------------------
-  //                                           handle reset
-  // --------------------------------------------------------------------------
+    // this.circle.beginPath();
+    // this.circle.arc(76,76,65,this.startPoint,endPoint+this.startPoint); // x, y, radius, start, end
 
-  // default back to work timer
-  handleReset() {
-    const activeTimer = {...this.props.activeTimer};
-
-    // end any running timer function
-    clearInterval(activeTimer.intervalID);
-
-    const duration = this.props.work.duration;
-    
-    activeTimer.name = 'work';
-    activeTimer.timeRemaining = duration;
-    activeTimer.duration = duration;
-    activeTimer.paused = true;
-
-    this.props.changeState({ activeTimer });
-  }
-
-  progressCircle() {
-    const timerName = this.props.activeTimer.name;
-    const duration = this.props.activeTimer.duration;
-    const timeRemaining = this.props.activeTimer.timeRemaining;
-    const progress = (duration - timeRemaining) / duration;
-
-    let endPoint = ((progress) * Math.PI * 2);
-    this.circle.clearRect(0,0,this.cw,this.ch); // clear canvas every time function is called
-
-    this.circle.lineWidth = 22; // stroke size
-    if (timerName === 'work') {
-      this.circle.strokeStyle = '#cf4547'; // var(--lightred)
-    } else if (timerName === 'break') {
-      this.circle.strokeStyle = '#e2d34e'; // var(--lightorange)
-    } else if (timerName === 'longBreak') {
-      this.circle.strokeStyle = '#8df37a'; // var(--lightgreen)
-    }
-
-    this.circle.beginPath();
-    this.circle.arc(76,76,65,this.startPoint,endPoint+this.startPoint); // x, y, radius, start, end
-
-    this.circle.stroke(); // fill stroke
+    // this.circle.stroke(); // fill stroke
   }
 
   render() {
       return (
-    <div className="buttons-container">  
-      <div className="reset-button noselect" onClick={this.handleReset}>✕</div>
-      <div 
-        className="button-progress"
-        style={this.props.styles.background}
-      >
-        <div className="button-progress-inner">
-          <i className={this.props.activeTimer.paused ? 'fas fa-play' : 'fas fa-pause'} style={this.props.styles.font}></i>
-        </div>
-      </div>
-      <canvas height="152" width="152" ref="circle" className="progress-canvas" onClick={this.handlePlayPause}/>
-    </div>
+      <ButtonsContainer>  
+        <ResetButton onClick={this.props.context.handleReset}>✕</ResetButton>
+
+        <StyledButtonProgress timer={this.props.context.state.activeTimer.name}>
+          <ButtonProgressInner timer={this.props.context.state.activeTimer.name}>
+            <i 
+              className={this.props.context.state.activeTimer.paused 
+                ? 'fas fa-play' 
+                : 'fas fa-pause'}
+            />
+          </ButtonProgressInner>
+        </StyledButtonProgress>
+
+        <ProgressCanvas 
+          height="152" 
+          width="152" 
+          innerRef={comp => this.circle = comp}
+          onClick={this.props.context.handlePlayPause}
+        />
+
+      </ButtonsContainer>
     );
   }
 }
 
-export default ButtonProgress;
+const WithContext = () => (
+  <TimersContext.Consumer>
+    {context => <ButtonProgress context={context} />}
+  </TimersContext.Consumer>
+)
+
+export default WithContext;
+
+const ButtonsContainer = styled.div`
+  position: relative;
+  width: 150px;
+  height: 150px;
+`;
+
+const ResetButton = styled.div`
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  font-size: 40px;
+  font-weight: 900;
+
+  &:hover {
+    color: var(--light-work);
+    cursor: pointer;
+  }
+`;
+
+const StyledButtonProgress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+  font-size: 64px;
+  transition: 1s;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  background: var(--dark-${props => props.timer})
+`;
+
+const ButtonProgressInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--darkgrey);
+  color: var(--light-${props => props.timer});
+  width: 106px;
+  height: 106px;
+  border-radius: 100%;
+  font-size: 1em;
+`;
+
+const ProgressCanvas = styled.canvas`
+  height: 150px;
+  width: 150px;
+  border-radius: 100%;
+
+  position: absolute;
+  top: 0;
+  left:0;
+  transition: border .5s;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+

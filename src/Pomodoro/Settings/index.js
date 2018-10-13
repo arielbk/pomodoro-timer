@@ -3,88 +3,119 @@ import GoalSetter from './GoalSetter';
 import LongBreakSetter from './LongBreakSetter';
 import SoundSetter from './SoundSetter';
 import TimeSetter from './TimeSetter';
-import './css/settings.css';
+
+import styled from 'styled-components';
 
 // container and title for timers' settings component
-class Settings extends Component {
-  // --------------------------------------------------------------------------
-  //                                           change pomodoro goal
-  // --------------------------------------------------------------------------
-
+export default class Settings extends Component {
   render() {
     return (
-    <div className="timer-settings" onMouseOver={() => this.props.onSettingsToggle('show')} onMouseOut={() => this.props.onSettingsToggle('hide')}>
+      <Container>
 
-      <div className="settings-group settings-work">
-        <div className="timer-title work-title" style={this.props.titleStyles.workTitle} onClick={this.props.onSettingsToggle}>Work</div>
-        <div className="timer-settings-content" style={this.props.settingsStyle}>
-          <TimeSetter 
-            className='settings-timer-work' 
-            timer={this.props.work}
-            changeState={this.props.changeState}
-            activeTimer={this.props.activeTimer}
-            mouseDown={this.props.mouseDown}
-          />
-          <SoundSetter 
-            changeState={this.props.changeState}
-            timer={this.props.work}
-            onSampleSound={timer => this.props.onSampleSound(timer)}
-            activeTimer={this.props.activeTimer}
-            sounds={this.props.sounds}
-          />
-          <GoalSetter changeState={this.props.changeState} goal={this.props.goal} mouseDown={this.props.mouseDown} />
-        </div>
-      </div>
-      
-      <div className="settings-group settings-break">
-        <div className="timer-title break-title" style={this.props.titleStyles.breakTitle}  onClick={this.props.onSettingsToggle}>Break</div>
-        <div className="timer-settings-content" style={this.props.settingsStyle}>
-          <TimeSetter 
-            classname='settings-timer-break' 
-            timer={this.props.break} 
-            changeState={this.props.changeState}
-            activeTimer={this.props.activeTimer}
-            mouseDown={this.props.mouseDown}
-          />
-          <SoundSetter 
-            changeState={this.props.changeState}
-            timer={this.props.break} 
-            onSampleSound={timer => this.props.onSampleSound(timer)}
-            activeTimer={this.props.activeTimer}
-            sounds={this.props.sounds}
-          />
-        </div>
-      </div>
+        <Group timer="work">
+          <Title timer="work" onClick={this.props.onSettingsToggle}>Work</Title>
+          <Content>
+            <TimeSetter timerName="work" />
+            <SoundSetter timerName="work" />
+            <GoalSetter timerName="work" />
+          </Content>
+        </Group>
+        
+        <Group timer="break">
+          <Title timer="break" onClick={this.props.onSettingsToggle}>Break</Title>
+          <Content>
+            <TimeSetter timerName="break" />
+            <SoundSetter timerName="break" />
+          </Content>
+        </Group>
 
-      <div className="settings-group settings-long-break">
-        <div className="timer-title long-break-title" style={this.props.titleStyles.longBreakTitle} onClick={this.props.onSettingsToggle}>Long Break</div>
-        <div className="timer-settings-content" style={this.props.settingsStyle}>
-          <TimeSetter 
-            classname='settings-timer-long-break' 
-            timer={this.props.longBreak} 
-            changeState={this.props.changeState}
-            activeTimer={this.props.activeTimer}
-            mouseDown={this.props.mouseDown}
-          />
-          <SoundSetter 
-            changeState={this.props.changeState}
-            timer={this.props.longBreak} 
-            onSampleSound={timer => this.props.onSampleSound(timer)}
-            activeTimer={this.props.activeTimer}
-            sounds={this.props.sounds}
-          />
-          <LongBreakSetter
-            changeState={this.props.changeState}
-            pomodoroSet={this.props.pomodoroSet}
-            mouseDown={this.props.mouseDown}
-          />
-        </div>
-      </div> 
+        <Group timer="longBreak">
+          <Title timer="longBreak" onClick={this.props.onSettingsToggle}>Long Break</Title>
+          <Content>
+            <TimeSetter timerName="longBreak" />
+            <SoundSetter timerName="longBreak" />
+            <LongBreakSetter timerName="longBreak" />
+          </Content>
+        </Group> 
 
-
-    </div>
+      </Container>
   )}
 }
+const Container = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 800px;
 
+  color: var(--darkgrey);
+  border-radius: 6px;
+  opacity: .9;
 
-export default Settings;
+  transition: .4s;
+`;
+
+const Title = styled.div`
+  text-transform: lowercase;
+  display: inline-block;
+  transition: color .5s;
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  padding: .4em;
+  border-bottom: 6px solid var(--dark-${props => props.timer});
+  color: var(--medgrey);
+  position: relative;
+`;
+
+const Group = styled.div`
+  &:hover ${Title} {
+    cursor: pointer;
+    color: var(--lightgrey);
+    border-bottom: 
+      6px solid var(--light-${props => props.timer}) !important;
+  }
+`;
+
+// this is the component that will be toggled...
+const Content = styled.div`
+  // max-height: 0;
+  overflow: hidden;
+`;
+
+// this is not used in this component - for export
+const SettingsItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: color 0.2s;
+  margin: 1em 0;
+  border-bottom: 3px solid var(--darkgrey);
+  text-transform: lowercase;
+  width: 220px;
+  position: relative;
+
+  &:hover {
+    color: var(--lightgrey);
+  }
+`;
+
+const IncrementDecrement = styled.a`
+  border: none;
+  background: transparent;
+  font-weight: 100;
+  font-size: 2rem;
+
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  ${Group} ${SettingsItem}:hover & {
+    opacity: 1;
+    color: var(--light-${props => props.timer})
+  }
+`;
+
+// export styles for use in other settings components
+export { Container, Title, Group, Content, SettingsItem, IncrementDecrement };

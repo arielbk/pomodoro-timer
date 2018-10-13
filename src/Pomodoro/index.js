@@ -1,265 +1,126 @@
-// all state is stored here, as well as top-most timer functions and sounds
+import React, { Component, Fragment } from 'react';
+import { TimersProvider } from './TimersContext';
 
-import React, { Component } from 'react';
-import View from './View';
+import Toggle from '../Utilities/Toggle';
+import Modal from '../Elements/Modal';
 
-import Bell from '../Sounds/bell.mp3';
-import Triumph from '../Sounds/triumph.mp3';
-import LevelUp from '../Sounds/levelup.mp3';
-import Winning from '../Sounds/winning.mp3';
+import ButtonProgress from './ButtonProgress';
+import ShowTime from './ShowTime';
+import Counters from './Counters';
+import Settings from './Settings/index.js';
+import About from './About';
+import Titles from './Titles';
 
-class Pomodoro extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTimer: {
-        name: 'work',
-        timeRemaining: 1500000,
-        duration: 1500000, // so that settings changes does not alter things - freeze timer duration
-        paused: true,
-        untilTime: 0,
-        intervalID: 0,
-      },
+import styled from 'styled-components';
 
-      showSettings: false,
-
-      // helps with the settings incrementors/decrementors that fire while the mouse is down
-      mouseDown: false,
-
-      // pomodoros completed, pomodoro goal, pomodoros between each long break
-      pomodoros: 0,
-      goal: 8,
-      pomodoroSet: 4,
-
-      // sound names to assign to a timer
-      sounds: [
-        'Bell',
-        'Triumph',
-        'LevelUp',
-        'Winning',
-      ],
-
-      // WORK TIMER
-      work: {
-        name: 'work',
-        duration: 1500000, // mseconds - 25 min default
-        sound: 'Triumph',
-      },
-
-      // BREAK TIMER
-      break: {
-        name: 'break',
-        duration: 300000, // mseconds - 5 min default
-        sound: 'Bell',
-      },
-
-      // LONG BREAK TIMER
-      longBreak: {
-        name: 'longBreak',
-        duration: 900000, // mseconds - 15 min default
-        sound: 'Winning'
-      },
-
-      // SHIFT TO STYLED COMPONENTS?
-      styles: {
-        // for the play and pause inner icon and the minutes remaining display
-        font: {
-          color: 'var(--lightred)',
-        },
-        // used for the progress bar background
-        background: {
-          background: 'var(--darkred)',
-        },
-        titles: {
-          workTitle: {
-            color: 'var(--lightred)',
-            borderBottom: '6px solid var(--lightred)',
-          },
-          breakTitle: {
-            color: '',
-            borderBottom: '',
-          },
-          longBreakTitle: {
-            color: '',
-            borderBottom: '',
-          }
-        },
-        settings: {
-          maxHeight: 0,
-        },
-        about: {
-          maxHeight: 0,
-          margin: 0,
-          padding: '0 2em',
-        }
-      }
-    }
-
-  // -----------------------------------------------------------------------------------------
-  //                                                                        `this` BINDINGS
-  // -----------------------------------------------------------------------------------------
-
-    this.setMouseDown = this.setMouseDown.bind(this);
-    this.setMouseUp = this.setMouseUp.bind(this);
-
-    this.timerFunc = this.timerFunc.bind(this);
-    this.onTimerEnd = this.onTimerEnd.bind(this);
-
-    this.timerStyler = this.timerStyler.bind(this);
-
-    this.changeState = this.changeState.bind(this);
-
-    this.handleSampleSound = this.handleSampleSound.bind(this);
-  }
-
-  // -----------------------------------------------------------------------------------------
-  //                                                                      LIFE CYCLE EVENTS
-  // -----------------------------------------------------------------------------------------
-  setMouseDown() {
-    this.setState({ mouseDown:true });
-  }
-  setMouseUp() {
-    this.setState({ mouseDown:false });
-  }
-
-  // keep track of mouse down and mouse up, and any key press
-  componentDidMount() {
-    document.addEventListener('mousedown', this.setMouseDown);
-    document.addEventListener('mouseup', this.setMouseUp);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.setMouseDown);
-    document.removeEventListener('mouseup', this.setMouseUp);
-  }
-
-
-  // -----------------------------------------------------------------------------------------
-  //                                                                              FUNCTIONS
-  // -----------------------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------
-  //                                           timer function
-  // --------------------------------------------------------------------------
-
-  // timer function called every second while timer is on
-  timerFunc() {
-    // clone active timer
-    const timer = {...this.state.activeTimer};
-
-    // if timer ends
-    if (timer.timeRemaining < 250) {
-      this.onTimerEnd(timer);
-      return;
-    }
-
-    timer.timeRemaining = Math.round(timer.untilTime - Date.now());
-
-    // set new state
-    this.setState({ activeTimer: timer }) 
-    console.log(timer.timeRemaining);
-  }
-
-  // --------------------------------------------------------------------------
-  //                                           timer ends
-  // --------------------------------------------------------------------------
-
-  onTimerEnd() {
-    let activeTimer = {...this.state.activeTimer};
-    clearInterval(activeTimer.intervalID);
-
-    this.refs[this.state[activeTimer.name].sound].play();
-
-    let nextTimer;
-    if (activeTimer.name === 'work') {
-      const pomodoros = this.state.pomodoros + 1;
-      this.setState({pomodoros});
-      if (pomodoros % this.state.pomodoroSet === 0) {
-        nextTimer = {...this.state.longBreak};
-      } else {
-        nextTimer = {...this.state.break};
-      }
-    } else {
-      nextTimer = {...this.state.work};
-    }
-
-    activeTimer.name = nextTimer.name;
-    activeTimer.duration = nextTimer.duration;
-    activeTimer.timeRemaining = activeTimer.duration;
-    activeTimer.paused = true;
-
-    this.setState({ activeTimer }, this.timerStyler);
-  };
-
-
-  // --------------------------------------------------------------------------
-  //       timer styler - does not really belong here - styled components coming
-  // --------------------------------------------------------------------------
-
-  timerStyler() {
-
-    const styles = JSON.parse(JSON.stringify(this.state.styles)); // deep clone
-    const timerName = this.state.activeTimer.name;
-
-    // empty out styles
-    styles.titles = {
-      workTitle: { color: '', borderBottom: '' },
-      breakTitle: { color: '', borderBottom: '' },
-      longBreakTitle: { color: '', borderBottom: '' }
-    }
-
-    if (timerName === 'work') { // reflect next work cycle
-      styles.titles.workTitle.color = 'var(--lightred)';
-      styles.titles.workTitle.borderBottom = '6px solid var(--lightred)';
-
-      styles.font.color = 'var(--lightred)';
-      styles.background.background = 'var(--darkred)';
-
-    } else if (timerName === 'break') {
-      styles.titles.breakTitle.color = 'var(--lightorange)';
-      styles.titles.breakTitle.borderBottom = '6px solid var(--lightorange)';
-
-      styles.font.color = 'var(--lightorange)';
-      styles.background.background = 'var(--darkorange)';
-
-    } else if (timerName === 'longBreak' ) {
-      styles.titles.longBreakTitle.color = 'var(--lightgreen)';
-      styles.titles.longBreakTitle.borderBottom = '6px solid var(--lightgreen)';
-      styles.font.color = 'var(--lightgreen)';
-      styles.background.background = 'var(--darkgreen)';
-
-    }  
-
-    // set new styles
-    this.setState({ styles });
-  }
-
-  handleSampleSound(timer) {
-    const sound = this.state[timer].sound;
-    this.refs[sound].play();
-  }
-
-  changeState(args) {
-    this.setState({...args}, () => args.activeTimer ? this.timerStyler() : '');
-    // this will also check the styles if the active timer is interacted with...
-  }
-
-  // -----------------------------------------------------------------------------------------
-  //                                                                              MAIN RENDER
-  // -----------------------------------------------------------------------------------------
-
+class View extends Component {
   render() {
     return (
-      <div className="app">
+      <TimersProvider>
+        <App>
+          <MainHeader>Pomodoro Timer</MainHeader>
+          <Divider />
+          <MainContent>
 
-        <View {...this.state} changeState={this.changeState} onTimerEnd={this.onTimerEnd} timerClone timerFunc={this.timerFunc} onSampleSound={this.handleSampleSound} />
-        <audio src={Bell} ref="Bell" />
-        <audio src={Triumph} ref="Triumph" />
-        <audio src={LevelUp} ref="LevelUp" />
-        <audio src={Winning} ref="Winning" />
+            {/* actual (non-styled) components */}
+            <ButtonProgress />
+            <ShowTime />
+            <Counters />
 
-      </div>
-    );
-  }
+          </MainContent>
+
+          <Titles />
+
+          <Toggle>
+            {({on, toggle}) => (
+              <Fragment>
+                <AboutToggle onClick={toggle}>About</AboutToggle>
+                <Modal toggle={toggle} on={on}>
+                  <About />
+                </Modal>
+              </Fragment>
+            )}
+          </Toggle>
+
+          <Toggle>
+            {({on, toggle}) => (
+              <Fragment>
+                <SettingsToggle onClick={toggle}>Settings</SettingsToggle>
+                <Modal toggle={toggle} on={on}>
+                  <Settings />
+                </Modal>
+              </Fragment>
+            )}
+          </Toggle>
+
+          {/* <SettingsToggle onClick={this.handleSettingsToggle}>Settings</SettingsToggle>
+            {this.state.showSettings && <Settings />} */}
+
+        </App>
+      </TimersProvider>
+  )}
 }
+export default View;
 
-export default Pomodoro;
+const App = styled.div`
+  position: relative;
+  max-width: 940px;
+  background: var(--darkgrey);
+  box-shadow: 0 12px 50px rgba(0,0,0,.6);
+  border-radius: 5px;
+  margin: 30px auto 60px auto;
+  padding: 40px 60px 80px 60px;
+`;
+
+const MainHeader = styled.h1`
+  font-size: 3.6em;
+  text-align: center;
+  margin: 0;
+`;
+
+const Divider = styled.div`
+  height: 5px;
+  width: 100%;
+  background: var(--medgrey);
+  border-radius: 5px;
+  margin: 20px 0;
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 60px 0;
+`;
+
+const AboutToggle = styled.div`
+  position: absolute;
+  top: 1.5em;
+  left: 2em;
+  background: var(--lightgrey);
+  color: var(--darkgrey);
+  padding: .2em;
+  border-radius: 6px;
+  opacity: .2;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+`;
+
+const SettingsToggle = styled.div`
+  position: absolute;
+  top: 1.5em;
+  right: 2em;
+  background: var(--lightgrey);
+  color: var(--darkgrey);
+  padding: .2em;
+  border-radius: 6px;
+  opacity: .2;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+`;
