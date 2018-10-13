@@ -1,5 +1,5 @@
 // Portal utility - so that components can be rendered outside of the main root div
-import React, { Component } from 'react';
+import { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 const portalRoot = document.getElementById('portal');
