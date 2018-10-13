@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
 import GoalSetter from './GoalSetter';
 import LongBreakSetter from './LongBreakSetter';
 import SoundSetter from './SoundSetter';
 import TimeSetter from './TimeSetter';
-
-import styled from 'styled-components';
 
 // container and title for timers' settings component
 export default class Settings extends Component {
@@ -62,8 +62,8 @@ const Title = styled.div`
   height: 45px;
   text-align: center;
   padding: .4em;
-  border-bottom: 6px solid var(--dark-${props => props.timer});
-  color: var(--medgrey);
+  border-bottom: 6px solid var(--medgrey);
+  color: var(--lightgrey);
   position: relative;
 `;
 

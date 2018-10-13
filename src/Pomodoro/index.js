@@ -35,7 +35,7 @@ class View extends Component {
             {({on, toggle}) => (
               <Fragment>
                 <AboutToggle onClick={toggle}>About</AboutToggle>
-                <Modal toggle={toggle} on={on}>
+                <Modal toggle={toggle} on={on} from='left'>
                   <About />
                 </Modal>
               </Fragment>
@@ -46,7 +46,7 @@ class View extends Component {
             {({on, toggle}) => (
               <Fragment>
                 <SettingsToggle onClick={toggle}>Settings</SettingsToggle>
-                <Modal toggle={toggle} on={on}>
+                <Modal toggle={toggle} on={on} from='right'>
                   <Settings />
                 </Modal>
               </Fragment>

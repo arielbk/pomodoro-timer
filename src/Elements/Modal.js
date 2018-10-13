@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import Portal from '../Utilities/Portal';
+import { Transition, animated, config } from 'react-spring';
 // React Spring to come in here as well
 
 export default class Modal extends Component {
   render() {
-    const { children, toggle, on } = this.props;
+    const { children, toggle, on, from } = this.props;
     return (
       <Portal>
-        {on && (
+        <Transition
+          
+          config={config.gentle}
+          from={{ opacity: 0, x: `${from === 'left' ? '-' : ''}400` }}
+          enter={{ opacity: 1, x: '0' }}
+          leave={{ opacity: 0, x: `${from === 'left' ? '-' : ''}400` }}
+        >
+        {on && (styles => (
           <ModalWrapper>
-            <ModalContent>
+            <ModalContent
+              style={{
+                transform: `translate3d(${Math.floor(styles.x)}px, 0, 0)`,
+                opacity: styles.opacity
+              }}
+            >
               { children }
             </ModalContent>
             <CloseButton 
@@ -18,9 +31,15 @@ export default class Modal extends Component {
             >
               ✕
             </CloseButton>
-            <Background onClick={toggle} />
+            <Background 
+              onClick={toggle} 
+              style={{
+                opacity: styles.opacity
+              }}
+            />
           </ModalWrapper>
-        )}
+        ))}
+        </Transition>
       </Portal>
     )
   }
@@ -39,11 +58,11 @@ const ModalWrapper = styled.div`
 `;
 
 const CloseButton = styled.div`
-  z-index: 100;
+  z-index: 101;
   position: absolute;
   right: 10px;
   top: 10px;
-  font-size: 2em;
+  font-size: 5rem;
 
   &:hover {
     color: var(--light-work);
@@ -51,7 +70,7 @@ const CloseButton = styled.div`
   }
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled(animated.div)`
   z-index: 100;
   background: var(--faintgrey);
   color: var(--lightgrey);
@@ -60,7 +79,7 @@ const ModalContent = styled.div`
   border-radius: 5px;
 `;
 
-const Background = styled.div`
+const Background = styled(animated.div)`
   position: fixed;
   width: 100vw;
   height: 100vh;
