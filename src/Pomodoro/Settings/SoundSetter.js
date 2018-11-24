@@ -1,70 +1,76 @@
-import React, { Component } from 'react';
-import TimersContext from '../TimersContext';
-
+import React from 'react';
 import styled from 'styled-components';
-import  { SettingsItem } from './index';
+import TimersContext from '../TimersContext';
+import { SettingsItem } from './Styles';
 
 //  settings component - select a sound
-export default class SoundSetter extends Component {
-  render() {
-    return (
-      <TimersContext>
-        {context => (
-          <StyledSoundSetter>
+const SoundSetter = (props) => {
+  const { timerName } = props;
+  return (
+    <TimersContext>
+      {context => (
+        <StyledSoundSetter>
 
-            <Arrow timer={this.props.timerName}
-              onMouseDown={() => {
+          <Arrow
+            timer={timerName}
+            onMouseDown={() => {
               let newIndex = context.state.sounds
-                .indexOf(context.state[this.props.timerName].sound);
-      
-              if (newIndex < 1 ) { newIndex = context.state.sounds.length-1; }
-              else { newIndex-- }
-      
+                .indexOf(context.state[timerName].sound);
+
+              if (newIndex < 1) { newIndex = context.state.sounds.length - 1; } else { newIndex--; }
+
               context.handleSoundSelect(context.state.sounds[newIndex]);
-              }}>&lt;
-            </Arrow>
+            }}
+          >
+            &lt;
+          </Arrow>
 
-            <SoundList>
-              {context.state.sounds.map(sound => {
-                return (
-                <li key={`${sound}`}
-                  hidden={sound === context.state[this.props.timerName].sound ? false : true}>
-                  <SoundIcon onClick={() => context.playSound(sound)}>
-                    <i className="fas fa-volume-up"></i>
-                  </SoundIcon>
-                  {sound}
-                </li>)
-              })}
-            </SoundList>
+          <SoundList>
+            {context.state.sounds.map(sound => (
+              <li
+                key={`${sound}`}
+                hidden={sound !== context.state[timerName].sound}
+              >
+                <SoundIcon onClick={() => context.playSound(sound)}>
+                  <i className="fas fa-volume-up" />
+                </SoundIcon>
+                {sound}
+              </li>))}
+          </SoundList>
 
-            <Arrow timer={this.props.timerName}
-              onMouseDown={() => {
+          <Arrow
+            timer={timerName}
+            onMouseDown={() => {
               let newIndex = context.state.sounds
-                .indexOf(context.state[this.props.timerName].sound);
-      
-              if (newIndex === context.state.sounds.length - 1 ) { newIndex = 0; }
-              else { newIndex++ }
-      
-              context.handleSoundSelect(this.props.timerName, context.state.sounds[newIndex]);
-              }}>&gt;
-            </Arrow>
+                .indexOf(context.state[timerName].sound);
 
-            <Progress>
-              {context.state.sounds.map((sound, index) => {
-                return (
-                <ProgressTab 
-                  onClick={() => context.handleSoundSelect(context.state.sounds[index])} key={`${sound}`} 
-                  active={sound === context.state[this.props.timerName].sound ? true : false }
-                  timer={this.props.timerName} />)
-              })}
-            </Progress>
+              if (newIndex === context.state.sounds.length - 1) {
+                newIndex = 0;
+              } else { newIndex++; }
 
-          </StyledSoundSetter>
-        )}
-      </TimersContext>
-    )
-  }
-}
+              context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
+            }}
+          >
+            &gt;
+          </Arrow>
+
+          <Progress>
+            {context.state.sounds.map((sound, index) => (
+              <ProgressTab
+                onClick={() => context.handleSoundSelect(context.state.sounds[index])}
+                key={`${sound}`}
+                active={sound === context.state[timerName].sound}
+                timer={timerName}
+              />))}
+          </Progress>
+
+        </StyledSoundSetter>
+      )}
+    </TimersContext>
+  );
+};
+
+export default SoundSetter;
 
 // for some weird reason styled components won't let me *just* pass in SettingsItem component... passing it as a callback works though
 const StyledSoundSetter = styled(props => <SettingsItem {...props} />)`
@@ -151,6 +157,6 @@ const ProgressTab = styled.div`
 
   &:hover {
     cursor: pointer;
-    background: var(--${props => props.active ? 'light' : 'dark'}-${props => props.timer});
+    background: var(--${props => (props.active ? 'light' : 'dark')}-${props => props.timer});
   }
 `;

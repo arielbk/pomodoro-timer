@@ -1,30 +1,37 @@
-import React, { Component } from 'react';
+import React from 'react';
 import TimersContext from '../TimersContext';
-import { SettingsItem, IncrementDecrement } from './index';
+import { SettingsItem, IncrementDecrement } from './Styles';
 
 // settings component - set a time
-export default class TimeSetter extends Component {
-  render() {
-    return (
-      <TimersContext.Consumer>
-        {context => (
-          <SettingsItem>
-            <IncrementDecrement 
-              timer={this.props.timerName} 
-              onMouseDown={() => context.handleDurationChange(this.props.timerName, -1)}>
-              –
-            </IncrementDecrement>
-              
-              <div>{Math.floor(context.state[this.props.timerName].duration / 60 / 1000)} min</div>
-            
-            <IncrementDecrement 
-              timer={this.props.timerName} 
-              onMouseDown={() => context.handleDurationChange(this.props.timerName, 1)}>
-              +
-            </IncrementDecrement>
-          </SettingsItem>
-        )}
-      </TimersContext.Consumer>
-    );
-  }
-}
+const TimeSetter = (props) => {
+  const { timerName } = props;
+  return (
+    <TimersContext.Consumer>
+      {context => (
+        <SettingsItem>
+          <IncrementDecrement
+            timer={timerName}
+            onMouseDown={() => context.handleDurationChange(timerName, -1)}
+          >
+            –
+          </IncrementDecrement>
+
+          <div>
+            {Math.floor(context.state[timerName].duration / 60 / 1000)}
+            {' '}
+            min
+          </div>
+
+          <IncrementDecrement
+            timer={timerName}
+            onMouseDown={() => context.handleDurationChange(timerName, 1)}
+          >
+            +
+          </IncrementDecrement>
+        </SettingsItem>
+      )}
+    </TimersContext.Consumer>
+  );
+};
+
+export default TimeSetter;
