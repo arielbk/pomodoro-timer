@@ -61,6 +61,10 @@ const Title = styled.div`
   padding: .4em;
   position: relative;
   color: var(--${props => props.active ? 'light' : 'med'}grey);
+
+  @media (max-width: 700px) {
+    width: 100%;
+  }
 `;
 
 const Underline = styled.div`
@@ -68,4 +72,8 @@ const Underline = styled.div`
   height: 5px;
   border-radius: 5px;
   background: var(--${props => props.active ? `light-${props.timer});` : 'faintgrey);'}
+
+    @media (max-width: 700px) {
+    width: 100%;
+  }
 `;

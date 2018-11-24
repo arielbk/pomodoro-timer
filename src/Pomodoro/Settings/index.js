@@ -52,6 +52,11 @@ const Container = styled.div`
   opacity: .9;
 
   transition: .4s;
+
+  @media (max-width: 700px) {
+    width: 100%;
+    flex-direction: column;
+  }
 `;
 
 const Title = styled.div`
@@ -97,6 +102,10 @@ const SettingsItem = styled.div`
 
   &:hover {
     color: var(--lightgrey);
+  }
+
+  @media (max-width: 700px) {
+    width: 100%;
   }
 `;
 
