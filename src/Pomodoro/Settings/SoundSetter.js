@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import TimersContext from '../TimersContext';
 import { SettingsItem } from './Styles';
 
@@ -14,10 +15,14 @@ const SoundSetter = (props) => {
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex = context.state.sounds
-                .indexOf(context.state[timerName].sound);
+              let newIndex;
 
-              if (newIndex < 1) { newIndex = context.state.sounds.length - 1; } else { newIndex--; }
+              if (newIndex < 1) {
+                newIndex = context.state.sounds.length - 1;
+              } else {
+                newIndex = context.state.sounds
+                  .indexOf(context.state[timerName].sound) - 1;
+              }
 
               context.handleSoundSelect(context.state.sounds[newIndex]);
             }}
@@ -41,12 +46,14 @@ const SoundSetter = (props) => {
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex = context.state.sounds
-                .indexOf(context.state[timerName].sound);
+              let newIndex;
 
               if (newIndex === context.state.sounds.length - 1) {
                 newIndex = 0;
-              } else { newIndex++; }
+              } else {
+                newIndex = context.state.sounds
+                  .indexOf(context.state[timerName].sound) + 1;
+              }
 
               context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
             }}
@@ -72,7 +79,12 @@ const SoundSetter = (props) => {
 
 export default SoundSetter;
 
-// for some weird reason styled components won't let me *just* pass in SettingsItem component... passing it as a callback works though
+SoundSetter.propTypes = {
+  timerName: PropTypes.string.isRequired,
+};
+
+/* for some weird reason styled components won't let me *just* pass in SettingsItem component...
+passing it as a callback works though */
 const StyledSoundSetter = styled(props => <SettingsItem {...props} />)`
   flex-wrap: wrap;
   text-align: center;

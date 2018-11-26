@@ -38,37 +38,38 @@ export class TimersProvider extends Component {
       'Winning',
     ],
 
-      // WORK TIMER
-      work: {
-        name: 'work',
-        duration: 1500000, // mseconds - 25 min default
-        sound: 'Triumph',
-      },
+    // WORK TIMER
+    work: {
+      name: 'work',
+      duration: 1500000, // mseconds - 25 min default
+      sound: 'Triumph',
+    },
 
-      // BREAK TIMER
-      break: {
-        name: 'break',
-        duration: 300000, // mseconds - 5 min default
-        sound: 'Bell',
-      },
+    // BREAK TIMER
+    break: {
+      name: 'break',
+      duration: 300000, // mseconds - 5 min default
+      sound: 'Bell',
+    },
 
-      // LONG BREAK TIMER
-      longBreak: {
-        name: 'longBreak',
-        duration: 900000, // mseconds - 15 min default
-        sound: 'Winning'
-      },
-    }
+    // LONG BREAK TIMER
+    longBreak: {
+      name: 'longBreak',
+      duration: 900000, // mseconds - 15 min default
+      sound: 'Winning',
+    },
+  }
 
-    // --------------------------------------------------------------------------
-    //                         mouse down/up lifecycle events
-    // --------------------------------------------------------------------------
-  
+  // --------------------------------------------------------------------------
+  //                         mouse down/up lifecycle events
+  // --------------------------------------------------------------------------
+
     setMouseDown = () => {
-      this.setState({ mouseDown: true })
+      this.setState({ mouseDown: true });
     }
+
     setMouseUp = () => {
-      this.setState({ mouseDown: false })
+      this.setState({ mouseDown: false });
     }
 
   componentDidMount = () => {
@@ -80,10 +81,6 @@ export class TimersProvider extends Component {
     document.removeEventListener('mousedown', this.setMouseDown);
     document.removeEventListener('mouseup', this.setMouseUp);
   }
-
-  // --------------------------------------------------------------------------
-  //                                           FUNCTIONS
-  // --------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------
   //                                        play sound
@@ -100,7 +97,8 @@ export class TimersProvider extends Component {
   // timer function called every second while timer is on
   timerFunc = () => {
     // clone active timer
-    const timer = {...this.state.activeTimer};
+
+    const timer = { ...this.state.activeTimer };
 
     // if timer ends
     if (timer.timeRemaining < 250) {
@@ -111,7 +109,7 @@ export class TimersProvider extends Component {
     timer.timeRemaining = Math.round(timer.untilTime - Date.now());
 
     // set new state
-    this.setState({ activeTimer: timer }) 
+    this.setState({ activeTimer: timer });
   }
 
 
@@ -120,7 +118,7 @@ export class TimersProvider extends Component {
   // --------------------------------------------------------------------------
 
   onTimerEnd = () => {
-    let activeTimer = {...this.state.activeTimer};
+    const activeTimer = { ...this.state.activeTimer };
     clearInterval(activeTimer.intervalID);
 
     this.playSound(this.state[activeTimer.name].sound);
@@ -128,14 +126,14 @@ export class TimersProvider extends Component {
     let nextTimer;
     if (activeTimer.name === 'work') {
       const pomodoros = this.state.pomodoros + 1;
-      this.setState({pomodoros});
+      this.setState({ pomodoros });
       if (pomodoros % this.state.pomodoroSet === 0) {
-        nextTimer = {...this.state.longBreak};
+        nextTimer = { ...this.state.longBreak };
       } else {
-        nextTimer = {...this.state.break};
+        nextTimer = { ...this.state.break };
       }
     } else {
-      nextTimer = {...this.state.work};
+      nextTimer = { ...this.state.work };
     }
 
     activeTimer.name = nextTimer.name;
@@ -151,7 +149,7 @@ export class TimersProvider extends Component {
   // --------------------------------------------------------------------------
 
   handlePlayPause = () => {
-    let activeTimer = {...this.state.activeTimer};
+    const activeTimer = { ...this.state.activeTimer };
 
     // pause or play the timer depending on current state
     if (activeTimer.paused) {
@@ -162,8 +160,8 @@ export class TimersProvider extends Component {
     }
 
     activeTimer.paused = !activeTimer.paused;
-    
-    this.setState({ activeTimer })
+
+    this.setState({ activeTimer });
   }
 
 
@@ -173,13 +171,13 @@ export class TimersProvider extends Component {
 
   // default back to work timer
   handleReset = () => {
-    const activeTimer = {...this.state.activeTimer};
+    const activeTimer = { ...this.state.activeTimer };
 
     // end any running timer function
     clearInterval(activeTimer.intervalID);
 
     const duration = this.state.work.duration;
-    
+
     activeTimer.name = 'work';
     activeTimer.timeRemaining = duration;
     activeTimer.duration = duration;
@@ -191,7 +189,7 @@ export class TimersProvider extends Component {
   // --------------------------------------------------------------------------
   //                                           goal change
   // --------------------------------------------------------------------------
-  
+
   handleGoalChange = (change) => {
     const goal = this.state.goal + change;
     if (goal < 1) return;
@@ -224,10 +222,10 @@ export class TimersProvider extends Component {
 
   handleSoundSelect = (timerName, sound) => {
     // clone timer
-    const timer = {...this.state[timerName]};
+    const timer = { ...this.state[timerName] };
     timer.sound = sound;
-    
-    this.setState({ [timerName]: timer })
+
+    this.setState({ [timerName]: timer });
   }
 
   // --------------------------------------------------------------------------
@@ -236,7 +234,7 @@ export class TimersProvider extends Component {
 
   handleDurationChange = (timerName, change) => {
     // clone timer and return if new duration is inappropriate
-    const timer = {...this.state[timerName]};
+    const timer = { ...this.state[timerName] };
     timer.duration += change * 60 * 1000; // from minutes to milliseconds
     if (timer.duration < 0 || timer.duration > 5940000) return; // 0 < timer < 99 minutes
 
@@ -250,7 +248,7 @@ export class TimersProvider extends Component {
       activeTimer.timeRemaining = timer.duration;
       this.setState({ activeTimer });
     }
-    
+
     // recurse the function if mouse click is held
     setTimeout(() => {
       if (this.state.mouseDown) this.handleDurationChange(timerName, change);
@@ -259,13 +257,16 @@ export class TimersProvider extends Component {
 
 
   render() {
+    const { children } = this.props;
     return (
       <TimersContext.Provider value={{
         // state
         state: this.state,
 
         // sounds
-        sounds: { Bell, Triumph, LevelUp, Winning },
+        sounds: {
+          Bell, Triumph, LevelUp, Winning,
+        },
 
         // functions
         setMouseUp: this.setMouseUp,
@@ -279,16 +280,17 @@ export class TimersProvider extends Component {
         handleSetChange: this.handleSetChange,
         handleSoundSelect: this.handleSoundSelect,
         handleDurationChange: this.handleDurationChange,
-      }}>
+      }}
+      >
 
-        { this.props.children }
+        { children }
 
         <audio src={Bell} ref={comp => this.Bell = comp} />
         <audio src={Triumph} ref={comp => this.Triumph = comp} />
         <audio src={LevelUp} ref={comp => this.LevelUp = comp} />
         <audio src={Winning} ref={comp => this.Winning = comp} />
       </TimersContext.Provider>
-    )
+    );
   }
 }
 

@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react';
 
 import {
-  Container, Title, Group, Content, SettingsItem,
+  Container, Title, Group, Content,
 } from './Styles';
 
 import GoalSetter from './GoalSetter';
@@ -11,38 +10,36 @@ import SoundSetter from './SoundSetter';
 import TimeSetter from './TimeSetter';
 
 // container and title for timers' settings component
-export default class Settings extends Component {
-  render() {
-    return (
-      <Container>
+const Settings = () => (
+  <Container>
 
-        <Group timer="work">
-          <Title timer="work" onClick={this.props.onSettingsToggle}>Work</Title>
-          <Content>
-            <TimeSetter timerName="work" />
-            <SoundSetter timerName="work" />
-            <GoalSetter timerName="work" />
-          </Content>
-        </Group>
+    <Group timer="work">
+      <Title timer="work">Work</Title>
+      <Content>
+        <TimeSetter timerName="work" />
+        <SoundSetter timerName="work" />
+        <GoalSetter timerName="work" />
+      </Content>
+    </Group>
 
-        <Group timer="break">
-          <Title timer="break" onClick={this.props.onSettingsToggle}>Break</Title>
-          <Content>
-            <TimeSetter timerName="break" />
-            <SoundSetter timerName="break" />
-          </Content>
-        </Group>
+    <Group timer="break">
+      <Title timer="break">Break</Title>
+      <Content>
+        <TimeSetter timerName="break" />
+        <SoundSetter timerName="break" />
+      </Content>
+    </Group>
 
-        <Group timer="longBreak">
-          <Title timer="longBreak" onClick={this.props.onSettingsToggle}>Long Break</Title>
-          <Content>
-            <TimeSetter timerName="longBreak" />
-            <SoundSetter timerName="longBreak" />
-            <LongBreakSetter timerName="longBreak" />
-          </Content>
-        </Group>
+    <Group timer="longBreak">
+      <Title timer="longBreak">Long Break</Title>
+      <Content>
+        <TimeSetter timerName="longBreak" />
+        <SoundSetter timerName="longBreak" />
+        <LongBreakSetter timerName="longBreak" />
+      </Content>
+    </Group>
 
-      </Container>
-    );
-  }
-}
+  </Container>
+);
+
+export default Settings;

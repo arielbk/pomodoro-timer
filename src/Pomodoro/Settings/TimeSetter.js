@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TimersContext from '../TimersContext';
 import { SettingsItem, IncrementDecrement } from './Styles';
 
@@ -35,3 +36,7 @@ const TimeSetter = (props) => {
 };
 
 export default TimeSetter;
+
+TimeSetter.propTypes = {
+  timerName: PropTypes.string.isRequired,
+};
