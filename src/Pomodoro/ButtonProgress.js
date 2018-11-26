@@ -8,14 +8,6 @@ import styled from 'styled-components';
 import TimersContext from './TimersContext';
 
 class ButtonProgress extends Component {
-  handleKeyPress = (e) => {
-    if (e.key === ' ') {
-      this.props.context.handlePlayPause();
-    } else if (e.key === 'Escape') {
-      this.props.context.handleReset();
-    }
-  }
-
   componentDidMount = () => {
     document.addEventListener('keyup', this.handleKeyPress);
   }
@@ -24,20 +16,31 @@ class ButtonProgress extends Component {
     document.removeEventListener('keyup', this.handleKeyPress);
   }
 
-  render() {
-      return (
-      <ButtonsContainer>  
-        <ResetButton onClick={this.props.context.handleReset}>✕</ResetButton>
+  handleKeyPress = (e) => {
+    const { context } = this.props; // eslint-disable-line react/prop-types
+    const { handlePlayPause, handleReset } = context;
+    if (e.key === ' ') {
+      handlePlayPause();
+    } else if (e.key === 'Escape') {
+      handleReset();
+    }
+  }
 
-        <StyledButtonProgress timer={this.props.context.state.activeTimer.name}>
-          <ButtonProgressInner 
-            paused={this.props.context.state.activeTimer.paused}
-            timer={this.props.context.state.activeTimer.name}
-            onClick={this.props.context.handlePlayPause}
+  render() {
+    const { context } = this.props;
+    return (
+      <ButtonsContainer>
+        <ResetButton onClick={context.handleReset}>✕</ResetButton>
+
+        <StyledButtonProgress timer={context.state.activeTimer.name}>
+          <ButtonProgressInner
+            paused={context.state.activeTimer.paused}
+            timer={context.state.activeTimer.name}
+            onClick={context.handlePlayPause}
           >
-            <i 
-              className={this.props.context.state.activeTimer.paused 
-                ? 'fas fa-play' 
+            <i
+              className={context.state.activeTimer.paused
+                ? 'fas fa-play'
                 : 'fas fa-pause'}
             />
           </ButtonProgressInner>
@@ -46,17 +49,17 @@ class ButtonProgress extends Component {
         <ProgressCircle
           height="140"
           width="140"
-          timer={this.props.context.state.activeTimer.name}
+          timer={context.state.activeTimer.name}
           progress={
-            this.props.context.state.activeTimer.timeRemaining
-              / this.props.context.state.activeTimer.duration
+            context.state.activeTimer.timeRemaining
+              / context.state.activeTimer.duration
           }
         >
           <circle
-            strokeDashoffset={ Math.floor( 10 * (
-              this.props.context.state.activeTimer.timeRemaining
-              / this.props.context.state.activeTimer.duration * 395.8))
-              /10}
+            strokeDashoffset={Math.floor(10 * (
+              context.state.activeTimer.timeRemaining
+              / context.state.activeTimer.duration * 395.8))
+              / 10}
           />
         </ProgressCircle>
 
@@ -69,7 +72,7 @@ const WithContext = () => (
   <TimersContext.Consumer>
     {context => <ButtonProgress context={context} />}
   </TimersContext.Consumer>
-)
+);
 
 export default WithContext;
 
@@ -101,13 +104,13 @@ const StyledButtonProgress = styled.div`
   height: 140px;
   font-size: 64px;
   border-radius: 50%;
-  background: var(--dark-${props=>props.timer});
+  background: var(--dark-${props => props.timer});
 
   &:hover {
     cursor: pointer;
   }
   `;
-  
+
 const ButtonProgressInner = styled.div`
   display: flex;
   align-items: center;

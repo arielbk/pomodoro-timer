@@ -1,69 +1,64 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
 import { TimersProvider } from './TimersContext';
 
 import Toggle from '../Utilities/Toggle';
 import Modal from '../Elements/Modal';
 
 import ButtonProgress from './ButtonProgress';
+import Settings from './Settings';
 import ShowTime from './ShowTime';
 import Counters from './Counters';
-import Settings from './Settings/index.js';
 import About from './About';
 import Titles from './Titles';
 
-import styled from 'styled-components';
 
-class View extends Component {
-  render() {
-    return (
-      <TimersProvider>
-        <App>
-          <MainHeader>Pomodoro Timer</MainHeader>
-          <Divider />
-          <MainContent>
+const View = () => (
+  <TimersProvider>
+    <App>
+      <MainHeader>Pomodoro Timer</MainHeader>
+      <Divider />
+      <MainContent>
 
-            {/* actual (non-styled) components */}
-            <ButtonProgress />
-            <ShowTime />
-            <Counters />
+        {/* actual (non-styled) components */}
+        <ButtonProgress />
+        <ShowTime />
+        <Counters />
 
-          </MainContent>
+      </MainContent>
 
-          <Titles />
+      <Titles />
 
-          <Toggle>
-            {({on, toggle}) => (
-              <Fragment>
-                <AboutToggle onClick={toggle}>
-                  <i className="fas fa-question" />
-                </AboutToggle>
-                <Modal toggle={toggle} on={on} from='left'>
-                  <About />
-                </Modal>
-              </Fragment>
-            )}
-          </Toggle>
+      <Toggle>
+        {({ on, toggle }) => (
+          <Fragment>
+            <AboutToggle onClick={toggle}>
+              <i className="fas fa-question" />
+            </AboutToggle>
+            <Modal toggle={toggle} on={on} from="left">
+              <About />
+            </Modal>
+          </Fragment>
+        )}
+      </Toggle>
 
-          <Toggle>
-            {({on, toggle}) => (
-              <Fragment>
-                <SettingsToggle onClick={toggle}>
-                <i className="fas fa-cog" />
-                </SettingsToggle>
-                <Modal toggle={toggle} on={on} from='right'>
-                  <Settings />
-                </Modal>
-              </Fragment>
-            )}
-          </Toggle>
+      <Toggle>
+        {({ on, toggle }) => (
+          <Fragment>
+            <SettingsToggle onClick={toggle}>
+              <i className="fas fa-cog" />
+            </SettingsToggle>
+            <Modal toggle={toggle} on={on} from="right">
+              <Settings />
+            </Modal>
+          </Fragment>
+        )}
+      </Toggle>
 
-          {/* <SettingsToggle onClick={this.handleSettingsToggle}>Settings</SettingsToggle>
-            {this.state.showSettings && <Settings />} */}
+    </App>
+  </TimersProvider>
+);
 
-        </App>
-      </TimersProvider>
-  )}
-}
 export default View;
 
 const App = styled.div`
