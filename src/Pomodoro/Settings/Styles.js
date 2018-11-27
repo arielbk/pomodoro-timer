@@ -6,7 +6,7 @@ const Container = styled.div`
   align-items: flex-start;
   width: 800px;
 
-  color: var(--darkgrey);
+  color: var(--lightgrey);
   border-radius: 6px;
   opacity: .9;
 
@@ -73,6 +73,7 @@ const IncrementDecrement = styled.a`
   background: transparent;
   font-weight: 100;
   font-size: 2rem;
+  color: var(--darkgrey);
 
   &:hover {
     cursor: pointer;

@@ -15,16 +15,14 @@ const SoundSetter = (props) => {
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex;
-
-              if (newIndex < 1) {
+              let newIndex = context.state.sounds
+                .indexOf(context.state[timerName].sound);
+              if (newIndex === 0) {
                 newIndex = context.state.sounds.length - 1;
               } else {
-                newIndex = context.state.sounds
-                  .indexOf(context.state[timerName].sound) - 1;
+                newIndex -= 1;
               }
-
-              context.handleSoundSelect(context.state.sounds[newIndex]);
+              context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
             }}
           >
             &lt;
@@ -46,13 +44,13 @@ const SoundSetter = (props) => {
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex;
+              let newIndex = context.state.sounds
+                .indexOf(context.state[timerName].sound);
 
               if (newIndex === context.state.sounds.length - 1) {
                 newIndex = 0;
               } else {
-                newIndex = context.state.sounds
-                  .indexOf(context.state[timerName].sound) + 1;
+                newIndex += 1;
               }
 
               context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
@@ -64,7 +62,7 @@ const SoundSetter = (props) => {
           <Progress>
             {context.state.sounds.map((sound, index) => (
               <ProgressTab
-                onClick={() => context.handleSoundSelect(context.state.sounds[index])}
+                onClick={() => context.handleSoundSelect(timerName, context.state.sounds[index])}
                 key={`${sound}`}
                 active={sound === context.state[timerName].sound}
                 timer={timerName}
@@ -166,6 +164,11 @@ const ProgressTab = styled.div`
   width: 13px;
   margin: 0 4px;
   border-radius: 100%;
+
+  ${StyledSoundSetter}:hover & {
+    ${props => props.active
+      && `background: var(--light-${props.timer});`}
+  }
 
   &:hover {
     cursor: pointer;
