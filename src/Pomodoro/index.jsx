@@ -15,7 +15,7 @@ import { FaCog, FaQuestion } from 'react-icons/fa';
 
 const View = () => (
   <TimersProvider>
-    <App>
+    <Container>
       <MainHeader>Pomodoro Timer</MainHeader>
       <Divider />
       <MainContent>
@@ -52,19 +52,19 @@ const View = () => (
           </Fragment>
         )}
       </Toggle>
-    </App>
+    </Container>
   </TimersProvider>
 );
 
 export default View;
 
-const App = styled.div`
+const Container = styled.div`
   position: relative;
   max-width: 940px;
   background: var(--darkgrey);
   box-shadow: 0 12px 50px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
-  margin: 30px auto 60px auto;
+  margin: auto;
   padding: 40px 60px 80px 60px;
 
   @media (max-width: 780px) {

@@ -1,8 +1,11 @@
-// Portal utility - so that components can be rendered outside of the main root div
+// Portal utility - components can be rendered outside of the main root div
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-const portalRoot = document.body.appendChild(document.createElement('div'));
+const portalEl = document.createElement('div');
+portalEl.setAttribute('id', 'portal');
+const portalRoot =
+  document.getElementById('portal') || document.body.appendChild(portalEl);
 
 export default class Portal extends Component {
   constructor() {
