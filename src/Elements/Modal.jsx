@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Transition, animated, config } from 'react-spring';
-import Portal from '../Utilities/Portal';
+import Portal from '../utilities/Portal';
 
 const Modal = props => {
   const { children, toggle, on, from } = props;

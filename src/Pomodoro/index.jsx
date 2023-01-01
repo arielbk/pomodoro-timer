@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { TimersProvider } from './TimersContext';
 
-import Toggle from '../Utilities/Toggle';
-import Modal from '../Elements/Modal';
+import Toggle from '../utilities/Toggle';
+import Modal from '../elements/Modal';
 
 import ButtonProgress from './ButtonProgress';
 import Settings from './Settings';
@@ -11,7 +11,7 @@ import ShowTime from './ShowTime';
 import Counters from './Counters';
 import About from './About';
 import Titles from './Titles';
-
+import { FaCog, FaQuestion } from 'react-icons/fa';
 
 const View = () => (
   <TimersProvider>
@@ -19,12 +19,10 @@ const View = () => (
       <MainHeader>Pomodoro Timer</MainHeader>
       <Divider />
       <MainContent>
-
         {/* actual (non-styled) components */}
         <ButtonProgress />
         <ShowTime />
         <Counters />
-
       </MainContent>
 
       <Titles />
@@ -33,7 +31,7 @@ const View = () => (
         {({ on, toggle }) => (
           <Fragment>
             <AboutToggle onClick={toggle}>
-              <i className="fas fa-question" />
+              <FaQuestion />
             </AboutToggle>
             <Modal toggle={toggle} on={on} from="left">
               <About />
@@ -46,7 +44,7 @@ const View = () => (
         {({ on, toggle }) => (
           <Fragment>
             <SettingsToggle onClick={toggle}>
-              <i className="fas fa-cog" />
+              <FaCog />
             </SettingsToggle>
             <Modal toggle={toggle} on={on} from="right">
               <Settings />
@@ -54,7 +52,6 @@ const View = () => (
           </Fragment>
         )}
       </Toggle>
-
     </App>
   </TimersProvider>
 );
@@ -65,7 +62,7 @@ const App = styled.div`
   position: relative;
   max-width: 940px;
   background: var(--darkgrey);
-  box-shadow: 0 12px 50px rgba(0,0,0,.6);
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.6);
   border-radius: 5px;
   margin: 30px auto 60px auto;
   padding: 40px 60px 80px 60px;
@@ -111,7 +108,7 @@ const StyledToggle = styled.div`
   top: 1.5em;
   background: var(--medgrey);
   color: var(--darkgrey);
-  padding: .2em;
+  padding: 0.2em;
   border-radius: 50%;
   width: 48px;
   height: 48px;

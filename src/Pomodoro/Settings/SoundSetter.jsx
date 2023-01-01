@@ -3,49 +3,55 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import TimersContext from '../TimersContext';
 import { SettingsItem } from './Styles';
+import { FaVolumeUp } from 'react-icons/fa';
 
 //  settings component - select a sound
 const SoundSetter = (props) => {
   const { timerName } = props;
   return (
     <TimersContext>
-      {context => (
+      {(context) => (
         <StyledSoundSetter>
-
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex = context.state.sounds
-                .indexOf(context.state[timerName].sound);
+              let newIndex = context.state.sounds.indexOf(
+                context.state[timerName].sound
+              );
               if (newIndex === 0) {
                 newIndex = context.state.sounds.length - 1;
               } else {
                 newIndex -= 1;
               }
-              context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
+              context.handleSoundSelect(
+                timerName,
+                context.state.sounds[newIndex]
+              );
             }}
           >
             &lt;
           </Arrow>
 
           <SoundList>
-            {context.state.sounds.map(sound => (
+            {context.state.sounds.map((sound) => (
               <li
                 key={`${sound}`}
                 hidden={sound !== context.state[timerName].sound}
               >
                 <SoundIcon onClick={() => context.playSound(sound)}>
-                  <i className="fas fa-volume-up" />
+                  <FaVolumeUp />
                 </SoundIcon>
                 {sound}
-              </li>))}
+              </li>
+            ))}
           </SoundList>
 
           <Arrow
             timer={timerName}
             onMouseDown={() => {
-              let newIndex = context.state.sounds
-                .indexOf(context.state[timerName].sound);
+              let newIndex = context.state.sounds.indexOf(
+                context.state[timerName].sound
+              );
 
               if (newIndex === context.state.sounds.length - 1) {
                 newIndex = 0;
@@ -53,7 +59,10 @@ const SoundSetter = (props) => {
                 newIndex += 1;
               }
 
-              context.handleSoundSelect(timerName, context.state.sounds[newIndex]);
+              context.handleSoundSelect(
+                timerName,
+                context.state.sounds[newIndex]
+              );
             }}
           >
             &gt;
@@ -62,13 +71,18 @@ const SoundSetter = (props) => {
           <Progress>
             {context.state.sounds.map((sound, index) => (
               <ProgressTab
-                onClick={() => context.handleSoundSelect(timerName, context.state.sounds[index])}
+                onClick={() =>
+                  context.handleSoundSelect(
+                    timerName,
+                    context.state.sounds[index]
+                  )
+                }
                 key={`${sound}`}
                 active={sound === context.state[timerName].sound}
                 timer={timerName}
-              />))}
+              />
+            ))}
           </Progress>
-
         </StyledSoundSetter>
       )}
     </TimersContext>
@@ -83,7 +97,7 @@ SoundSetter.propTypes = {
 
 /* for some weird reason styled components won't let me *just* pass in SettingsItem component...
 passing it as a callback works though */
-const StyledSoundSetter = styled(props => <SettingsItem {...props} />)`
+const StyledSoundSetter = styled((props) => <SettingsItem {...props} />)`
   flex-wrap: wrap;
   text-align: center;
   border-bottom: 1px solid var(--faintgrey);
@@ -100,7 +114,7 @@ const Arrow = styled.a`
   }
 
   ${StyledSoundSetter}:hover & {
-    color: var(--light-${props => props.timer});
+    color: var(--light- ${(props) => props.timer});
   }
 `;
 
@@ -114,7 +128,7 @@ const SoundIcon = styled.span`
   width: 1em;
   height: 1em;
   border-radius: 100%;
-  margin-right: .5em;
+  margin-right: 0.5em;
   position: absolute;
   left: 2em;
 
@@ -124,26 +138,26 @@ const SoundIcon = styled.span`
   }
 
   & i {
-    font-size: .7em;
+    font-size: 0.7em;
     color: var(--darkgrey);
   }
 `;
 
 const SoundList = styled.ul`
   margin: 0;
-  padding: .5em;
+  padding: 0.5em;
 
   li {
     list-style: none;
     text-align: center;
-    padding: .5em 0;
+    padding: 0.5em 0;
 
     &:hover {
       cursor: pointer;
       color: var(--lightgrey);
     }
 
-    ${props => props.hidden && 'display: none'}
+    ${(props) => props.hidden && 'display: none'}
   }
 `;
 
@@ -166,12 +180,14 @@ const ProgressTab = styled.div`
   border-radius: 100%;
 
   ${StyledSoundSetter}:hover & {
-    ${props => props.active
-      && `background: var(--light-${props.timer});`}
+    ${(props) => props.active && `background: var(--light-${props.timer});`}
   }
 
   &:hover {
     cursor: pointer;
-    background: var(--${props => (props.active ? 'light' : 'dark')}-${props => props.timer});
+    background: var(
+      -- ${(props) => (props.active ? 'light' : 'dark')}-
+        ${(props) => props.timer}
+    );
   }
 `;
