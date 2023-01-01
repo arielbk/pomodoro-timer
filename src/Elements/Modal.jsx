@@ -3,21 +3,20 @@ import styled from 'styled-components';
 import { Transition, animated, config } from 'react-spring';
 import Portal from '../Utilities/Portal';
 
-const Modal = (props) => {
-  const {
-    children, toggle, on, from,
-  } = props;
+const Modal = props => {
+  const { children, toggle, on, from } = props;
   return (
     <Portal>
-      <Transition
+      <div />
+      {/* <Transition
         native
         config={config.gentle}
         from={{ opacity: 0, x: `${from === 'left' ? '-' : ''}300` }}
         enter={{ opacity: 1, x: '0' }}
         leave={{ opacity: 0, x: `${from === 'left' ? '-' : ''}300` }}
       >
-        {on
-          && (styles => (
+        {on &&
+          (styles => (
             <ModalWrapper>
               <ModalContent
                 style={{
@@ -37,7 +36,7 @@ const Modal = (props) => {
               />
             </ModalWrapper>
           ))}
-      </Transition>
+      </Transition> */}
     </Portal>
   );
 };
