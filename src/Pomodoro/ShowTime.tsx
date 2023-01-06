@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TimersContext, { TimersContextType, TimerType } from './TimersContext';
+import TimersContext, { TimersContextType, TimerName } from './TimersContext';
 
 // displays the timer's current time formatted
 const ShowTime: React.FC<{ context: TimersContextType }> = ({ context }) => {
@@ -37,7 +37,7 @@ const Container = styled.span`
 `;
 
 // this needs to change depending on the timer we are on... COLOUR!
-const Minutes = styled.div<{ timer: TimerType }>`
+const Minutes = styled.div<{ timer: TimerName }>`
   display: inline-block;
   font-size: 7.2em;
   letter-spacing: -0.05em;
@@ -49,7 +49,7 @@ const Group = styled.div`
   margin-left: 10px;
 `;
 
-const Seconds = styled.div<{ timer: TimerType }>`
+const Seconds = styled.div<{ timer: TimerName }>`
   font-size: 3.2em;
   color: #999;
   text-align: right;

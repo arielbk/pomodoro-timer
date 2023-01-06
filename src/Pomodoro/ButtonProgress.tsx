@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { FaPlay, FaPause } from 'react-icons/fa';
-import TimersContext, { TimersContextType, TimerType } from './TimersContext';
+import TimersContext, { TimersContextType, TimerName } from './TimersContext';
 
 class ButtonProgress extends Component<{ context: TimersContextType }> {
   componentDidMount = () => {
@@ -94,7 +94,7 @@ const ResetButton = styled.div`
   }
 `;
 
-const StyledButtonProgress = styled.div<{ timer: TimerType }>`
+const StyledButtonProgress = styled.div<{ timer: TimerName }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +111,7 @@ const StyledButtonProgress = styled.div<{ timer: TimerType }>`
 `;
 
 const ButtonProgressInner = styled.button<{
-  timer: TimerType;
+  timer: TimerName;
   paused: boolean;
 }>`
   display: flex;
@@ -132,7 +132,7 @@ const ButtonProgressInner = styled.button<{
   }
 `;
 
-const ProgressCircle = styled.svg<{ timer: TimerType }>`
+const ProgressCircle = styled.svg<{ timer: TimerName }>`
   position: absolute;
   left: 0;
   top: 0;

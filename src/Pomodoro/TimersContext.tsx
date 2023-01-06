@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
+import Bell from './sounds/bell.mp3';
+import Triumph from './sounds/triumph.mp3';
+import LevelUp from './sounds/levelup.mp3';
+import Winning from './sounds/winning.mp3';
 
-// import sounds for use in different components
-import Bell from '../Sounds/bell.mp3';
-import Triumph from '../Sounds/triumph.mp3';
-import LevelUp from '../Sounds/levelup.mp3';
-import Winning from '../Sounds/winning.mp3';
+export type TimerName = 'work' | 'break' | 'longBreak';
+export type SoundType = 'Bell' | 'Triumph' | 'LevelUp' | 'Winning';
+export type TimerType = {
+  name: TimerName;
+  duration: number;
+  sound: SoundType;
+};
 
-export type TimerType = 'work' | 'break' | 'longBreak';
-
-const initialState = {
+export const initialState = {
   activeTimer: {
-    name: 'work' as TimerType,
+    name: 'work' as TimerName,
     timeRemaining: 1500000,
     duration: 1500000, // so that settings changes does not alter things - freeze timer duration
     paused: true,
@@ -29,28 +33,28 @@ const initialState = {
   pomodoroSet: 4,
 
   // sound names to assign to a timer
-  sounds: ['Bell', 'Triumph', 'LevelUp', 'Winning'],
+  sounds: ['Bell', 'Triumph', 'LevelUp', 'Winning'] as SoundType[],
 
   // WORK TIMER
   work: {
     name: 'work',
     duration: 1500000, // mseconds - 25 min default
-    sound: 'Triumph',
-  },
+    sound: 'Triumph' as SoundType,
+  } as TimerType,
 
   // BREAK TIMER
   break: {
     name: 'break',
     duration: 300000, // mseconds - 5 min default
-    sound: 'Bell',
-  },
+    sound: 'Bell' as SoundType,
+  } as TimerType,
 
   // LONG BREAK TIMER
   longBreak: {
     name: 'longBreak',
     duration: 900000, // mseconds - 15 min default
-    sound: 'Winning',
-  },
+    sound: 'Winning' as SoundType,
+  } as TimerType,
 };
 
 export interface TimersContextType {
@@ -70,8 +74,8 @@ export interface TimersContextType {
   handleReset: () => void;
   handleGoalChange: (newGoal: number) => void;
   handleSetChange: (newSet: number) => void;
-  handleSoundSelect: (timer: TimerType, newSound: any) => void;
-  handleDurationChange: (timer: TimerType, newDuration: number) => void;
+  handleSoundSelect: (timer: TimerName, newSound: any) => void;
+  handleDurationChange: (timer: TimerName, newDuration: number) => void;
 }
 
 const TimersContext = React.createContext({
@@ -111,14 +115,14 @@ export class TimersProvider extends Component<
   //                                        play sound
   // --------------------------------------------------------------------------
 
-  playSound = (sound) => {
-    this[sound].play();
+  playSound = (sound: SoundType) => {
+    this[sound]?.play();
   };
 
-  Bell: HTMLAudioElement | null;
-  Triumph: HTMLAudioElement | null;
-  LevelUp: HTMLAudioElement | null;
-  Winning: HTMLAudioElement | null;
+  Bell: HTMLAudioElement | null = null;
+  Triumph: HTMLAudioElement | null = null;
+  LevelUp: HTMLAudioElement | null = null;
+  Winning: HTMLAudioElement | null = null;
 
   // --------------------------------------------------------------------------
   //                                           timer function
@@ -152,7 +156,7 @@ export class TimersProvider extends Component<
 
     this.playSound(this.state[activeTimer.name].sound);
 
-    let nextTimer;
+    let nextTimer: TimerType;
     if (activeTimer.name === 'work') {
       const pomodoros = this.state.pomodoros + 1;
       this.setState({ pomodoros });
@@ -218,7 +222,7 @@ export class TimersProvider extends Component<
   //                                           goal change
   // --------------------------------------------------------------------------
 
-  handleGoalChange = (change) => {
+  handleGoalChange = (change: number) => {
     const goal = this.state.goal + change;
     if (goal < 1) return;
     this.setState({ goal });
@@ -233,7 +237,7 @@ export class TimersProvider extends Component<
   //                                           pomodoro set change
   // --------------------------------------------------------------------------
 
-  handleSetChange = (change) => {
+  handleSetChange = (change: number) => {
     const pomodoroSet = this.state.pomodoroSet + change;
     if (pomodoroSet < 1) return;
     this.setState({ pomodoroSet });
@@ -248,7 +252,7 @@ export class TimersProvider extends Component<
   //                                           select a new sound for a timer
   // --------------------------------------------------------------------------
 
-  handleSoundSelect = (timerName: TimerType, sound: string) => {
+  handleSoundSelect = (timerName: TimerName, sound: SoundType) => {
     // clone timer
     const timer = { ...this.state[timerName] };
     timer.sound = sound;
@@ -260,7 +264,7 @@ export class TimersProvider extends Component<
   //                                           timer duration change
   // --------------------------------------------------------------------------
 
-  handleDurationChange = (timerName: TimerType, change) => {
+  handleDurationChange = (timerName: TimerName, change: number) => {
     // clone timer and return if new duration is inappropriate
     const timer = { ...this.state[timerName] };
     timer.duration += change * 60 * 1000; // from minutes to milliseconds

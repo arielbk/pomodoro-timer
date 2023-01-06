@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
-import TimersContext, { TimerType } from './TimersContext';
+import TimersContext, { TimerName } from './TimersContext';
 
 const Titles = () => (
   <TimersContext.Consumer>
@@ -60,7 +60,7 @@ const Title = styled.div<{ active: boolean }>`
   }
 `;
 
-const Underline = styled.div<{ active: boolean; timer: TimerType }>`
+const Underline = styled.div<{ active: boolean; timer: TimerName }>`
   width: 30%;
   height: 5px;
   border-radius: 5px;

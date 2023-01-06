@@ -1,13 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import TimersContext, { TimerType } from '../TimersContext';
-import { SettingsItem } from './Styles';
 import { FaVolumeUp } from 'react-icons/fa';
+import styled from 'styled-components';
+import TimersContext, { TimerName } from '../TimersContext';
+import { SettingsItem } from './Styles';
 
-//  settings component - select a sound
-const SoundSetter = (props) => {
-  const { timerName } = props;
+interface Props {
+  timerName: TimerName;
+}
+
+const SoundSetter: React.FC<Props> = ({ timerName }) => {
   return (
     <TimersContext.Consumer>
       {(context) => (
@@ -91,10 +92,6 @@ const SoundSetter = (props) => {
 
 export default SoundSetter;
 
-SoundSetter.propTypes = {
-  timerName: PropTypes.string.isRequired,
-};
-
 /* for some weird reason styled components won't let me *just* pass in SettingsItem component...
 passing it as a callback works though */
 const StyledSoundSetter = styled((props) => <SettingsItem {...props} />)`
@@ -105,7 +102,7 @@ const StyledSoundSetter = styled((props) => <SettingsItem {...props} />)`
   padding-bottom: 15px;
 `;
 
-const Arrow = styled.a<{ timer: TimerType }>`
+const Arrow = styled.a<{ timer: TimerName }>`
   font-size: 2rem;
   color: var(--darkgrey);
 
@@ -114,7 +111,7 @@ const Arrow = styled.a<{ timer: TimerType }>`
   }
 
   ${StyledSoundSetter}:hover & {
-    color: var(--light- ${(props) => props.timer});
+    // color: var(${(props) => '--dark-' + props.timer});
   }
 `;
 
@@ -156,8 +153,9 @@ const SoundList = styled.ul`
       cursor: pointer;
       color: var(--lightgrey);
     }
-
-    ${(props) => props.hidden && 'display: none'}
+  }
+  li[hidden] {
+    display: none;
   }
 `;
 
@@ -172,7 +170,7 @@ const Progress = styled.div`
   padding-bottom: 15px;
 `;
 
-const ProgressTab = styled.div<{ active: boolean; timer: TimerType }>`
+const ProgressTab = styled.div<{ active: boolean; timer: TimerName }>`
   background: var(--medgrey);
   height: 13px;
   width: 13px;
@@ -186,8 +184,8 @@ const ProgressTab = styled.div<{ active: boolean; timer: TimerType }>`
   &:hover {
     cursor: pointer;
     background: var(
-      -- ${(props) => (props.active ? 'light' : 'dark')}-
-        ${(props) => props.timer}
+      ${(props) =>
+        props.active ? `--light-${props.timer}` : `--dark-${props.timer}`}
     );
   }
 `;

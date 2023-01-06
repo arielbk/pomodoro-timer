@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TimerType } from '../TimersContext';
+import { TimerName } from '../TimersContext';
 
 const Container = styled.div`
   display: flex;
@@ -32,11 +32,11 @@ const Title = styled.div`
   position: relative;
 `;
 
-const Group = styled.div<{ timer: TimerType }>`
+const Group = styled.div<{ timer: TimerName }>`
   &:hover ${Title} {
     cursor: pointer;
     color: var(--lightgrey);
-    border-bottom: 6px solid var(--light- ${(props) => props.timer}) !important;
+    border-bottom: 6px solid var(${(props) => '--light-' + props.timer}) !important;
   }
 `;
 
@@ -68,7 +68,7 @@ const SettingsItem = styled.div`
   }
 `;
 
-const IncrementDecrement = styled.a<{ timer: TimerType }>`
+const IncrementDecrement = styled.a<{ timer: TimerName }>`
   border: none;
   background: transparent;
   font-weight: 100;
@@ -82,7 +82,7 @@ const IncrementDecrement = styled.a<{ timer: TimerType }>`
 
   ${Group} ${SettingsItem}:hover & {
     opacity: 1;
-    color: var(--light- ${(props) => props.timer});
+    color: var(${(props) => '--light-' + props.timer});
   }
 `;
 

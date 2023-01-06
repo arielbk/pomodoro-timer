@@ -1,16 +1,17 @@
-import React, { Fragment } from 'react';
+import '@fontsource/roboto';
+import '@fontsource/rubik';
 import { FaCog, FaQuestion } from 'react-icons/fa';
 import styled from 'styled-components';
-import Modal from './Modal';
-import useToggle from './useToggle';
-import Toggle from './useToggle';
 import About from './About';
 import ButtonProgress from './ButtonProgress';
 import Counters from './Counters';
+import './global.css';
+import Modal from './Modal';
 import Settings from './Settings';
 import ShowTime from './ShowTime';
 import { TimersProvider } from './TimersContext';
 import Titles from './Titles';
+import useToggle from './useToggle';
 
 const View = () => {
   const [aboutOpen, toggleAboutOpen] = useToggle();

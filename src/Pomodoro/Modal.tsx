@@ -3,8 +3,14 @@ import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import Portal from './Portal';
 
-const Modal = (props) => {
-  const { children, toggle, on, from } = props;
+interface Props {
+  children: React.ReactNode;
+  toggle: () => void;
+  on: boolean;
+  from: 'left' | 'right';
+}
+
+const Modal: React.FC<Props> = ({ children, toggle, on, from }) => {
   const initialStyle = { opacity: 0, x: `${from === 'left' ? '-' : ''}300px` };
   return (
     <Portal>
