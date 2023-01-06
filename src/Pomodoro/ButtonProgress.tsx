@@ -17,7 +17,7 @@ class ButtonProgress extends Component<{ context: TimersContextType }> {
     document.removeEventListener('keyup', this.handleKeyPress);
   };
 
-  handleKeyPress = (e) => {
+  handleKeyPress = (e: KeyboardEvent) => {
     const { context } = this.props; // eslint-disable-line react/prop-types
     const { handlePlayPause, handleReset } = context;
     if (e.key === ' ') {
