@@ -6,54 +6,84 @@ import Triumph from '../Sounds/triumph.mp3';
 import LevelUp from '../Sounds/levelup.mp3';
 import Winning from '../Sounds/winning.mp3';
 
-const TimersContext = React.createContext();
+export type TimerType = 'work' | 'break' | 'longBreak';
 
-export class TimersProvider extends Component {
-  // all timer state lives here
-  state = {
-    activeTimer: {
-      name: 'work',
-      timeRemaining: 1500000,
-      duration: 1500000, // so that settings changes does not alter things - freeze timer duration
-      paused: true,
-      untilTime: 0,
-      intervalID: 0,
-    },
+const initialState = {
+  activeTimer: {
+    name: 'work' as TimerType,
+    timeRemaining: 1500000,
+    duration: 1500000, // so that settings changes does not alter things - freeze timer duration
+    paused: true,
+    untilTime: 0,
+    intervalID: 0,
+  },
 
-    showSettings: false,
+  showSettings: false,
 
-    // helps with the settings incrementors/decrementors that rapidly fire while the mouse is down
-    mouseDown: false,
+  // helps with the settings incrementors/decrementors that rapidly fire while the mouse is down
+  mouseDown: false,
 
-    // pomodoros completed, pomodoro goal, pomodoros between each long break
-    pomodoros: 0,
-    goal: 8,
-    pomodoroSet: 4,
+  // pomodoros completed, pomodoro goal, pomodoros between each long break
+  pomodoros: 0,
+  goal: 8,
+  pomodoroSet: 4,
 
-    // sound names to assign to a timer
-    sounds: ['Bell', 'Triumph', 'LevelUp', 'Winning'],
+  // sound names to assign to a timer
+  sounds: ['Bell', 'Triumph', 'LevelUp', 'Winning'],
 
-    // WORK TIMER
-    work: {
-      name: 'work',
-      duration: 1500000, // mseconds - 25 min default
-      sound: 'Triumph',
-    },
+  // WORK TIMER
+  work: {
+    name: 'work',
+    duration: 1500000, // mseconds - 25 min default
+    sound: 'Triumph',
+  },
 
-    // BREAK TIMER
-    break: {
-      name: 'break',
-      duration: 300000, // mseconds - 5 min default
-      sound: 'Bell',
-    },
+  // BREAK TIMER
+  break: {
+    name: 'break',
+    duration: 300000, // mseconds - 5 min default
+    sound: 'Bell',
+  },
 
-    // LONG BREAK TIMER
-    longBreak: {
-      name: 'longBreak',
-      duration: 900000, // mseconds - 15 min default
-      sound: 'Winning',
-    },
+  // LONG BREAK TIMER
+  longBreak: {
+    name: 'longBreak',
+    duration: 900000, // mseconds - 15 min default
+    sound: 'Winning',
+  },
+};
+
+export interface TimersContextType {
+  state: typeof initialState;
+  sounds: {
+    Bell: string;
+    Triumph: string;
+    LevelUp: string;
+    Winning: string;
   };
+  setMouseUp: () => void;
+  setMouseDown: () => void;
+  playSound: (sound: any) => void;
+  timerFunc: () => void;
+  onTimerEnd: () => void;
+  handlePlayPause: () => void;
+  handleReset: () => void;
+  handleGoalChange: (newGoal: number) => void;
+  handleSetChange: (newSet: number) => void;
+  handleSoundSelect: (timer: TimerType, newSound: any) => void;
+  handleDurationChange: (timer: TimerType, newDuration: number) => void;
+}
+
+const TimersContext = React.createContext({
+  state: initialState,
+} as TimersContextType);
+
+export class TimersProvider extends Component<
+  { children: React.ReactElement },
+  typeof initialState
+> {
+  // all timer state lives here
+  state = initialState;
 
   // --------------------------------------------------------------------------
   //                         mouse down/up lifecycle events
@@ -81,9 +111,14 @@ export class TimersProvider extends Component {
   //                                        play sound
   // --------------------------------------------------------------------------
 
-  playSound = sound => {
+  playSound = (sound) => {
     this[sound].play();
   };
+
+  Bell: HTMLAudioElement | null;
+  Triumph: HTMLAudioElement | null;
+  LevelUp: HTMLAudioElement | null;
+  Winning: HTMLAudioElement | null;
 
   // --------------------------------------------------------------------------
   //                                           timer function
@@ -97,7 +132,7 @@ export class TimersProvider extends Component {
 
     // if timer ends
     if (timer.timeRemaining < 250) {
-      this.onTimerEnd(timer);
+      this.onTimerEnd();
       return;
     }
 
@@ -183,14 +218,14 @@ export class TimersProvider extends Component {
   //                                           goal change
   // --------------------------------------------------------------------------
 
-  handleGoalChange = change => {
+  handleGoalChange = (change) => {
     const goal = this.state.goal + change;
     if (goal < 1) return;
     this.setState({ goal });
 
     // continue recursing the function every 0.1 seconds if mouse click is held
     setTimeout(() => {
-      if (this.props.mouseDown) this.handleGoalChange(change);
+      if (this.state.mouseDown) this.handleGoalChange(change);
     }, 100);
   };
 
@@ -198,7 +233,7 @@ export class TimersProvider extends Component {
   //                                           pomodoro set change
   // --------------------------------------------------------------------------
 
-  handleSetChange = change => {
+  handleSetChange = (change) => {
     const pomodoroSet = this.state.pomodoroSet + change;
     if (pomodoroSet < 1) return;
     this.setState({ pomodoroSet });
@@ -213,30 +248,33 @@ export class TimersProvider extends Component {
   //                                           select a new sound for a timer
   // --------------------------------------------------------------------------
 
-  handleSoundSelect = (timerName, sound) => {
+  handleSoundSelect = (timerName: TimerType, sound: string) => {
     // clone timer
     const timer = { ...this.state[timerName] };
     timer.sound = sound;
 
-    this.setState({ [timerName]: timer });
+    this.setState({ ...this.state, [timerName]: timer });
   };
 
   // --------------------------------------------------------------------------
   //                                           timer duration change
   // --------------------------------------------------------------------------
 
-  handleDurationChange = (timerName, change) => {
+  handleDurationChange = (timerName: TimerType, change) => {
     // clone timer and return if new duration is inappropriate
     const timer = { ...this.state[timerName] };
     timer.duration += change * 60 * 1000; // from minutes to milliseconds
     if (timer.duration < 0 || timer.duration > 5940000) return; // 0 < timer < 99 minutes
 
     // set state
-    this.setState({ [timer.name]: timer });
+    this.setState({ ...this.state, [timer.name]: timer });
 
     // set active timer if it is the one being changed and it has not started
     const { activeTimer } = this.state;
-    if (timer.name === activeTimer.name && activeTimer.duration === activeTimer.timeRemaining) {
+    if (
+      timer.name === activeTimer.name &&
+      activeTimer.duration === activeTimer.timeRemaining
+    ) {
       activeTimer.duration = timer.duration;
       activeTimer.timeRemaining = timer.duration;
       this.setState({ activeTimer });
@@ -280,10 +318,10 @@ export class TimersProvider extends Component {
       >
         {children}
 
-        <audio src={Bell} ref={comp => (this.Bell = comp)} />
-        <audio src={Triumph} ref={comp => (this.Triumph = comp)} />
-        <audio src={LevelUp} ref={comp => (this.LevelUp = comp)} />
-        <audio src={Winning} ref={comp => (this.Winning = comp)} />
+        <audio src={Bell} ref={(comp) => (this.Bell = comp)} />
+        <audio src={Triumph} ref={(comp) => (this.Triumph = comp)} />
+        <audio src={LevelUp} ref={(comp) => (this.LevelUp = comp)} />
+        <audio src={Winning} ref={(comp) => (this.Winning = comp)} />
       </TimersContext.Provider>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
-import Portal from '../utilities/Portal';
+import Portal from './Portal';
 
 const Modal = (props) => {
   const { children, toggle, on, from } = props;

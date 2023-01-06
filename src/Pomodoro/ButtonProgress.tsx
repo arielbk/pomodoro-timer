@@ -6,9 +6,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { FaPlay, FaPause } from 'react-icons/fa';
-import TimersContext from './TimersContext';
+import TimersContext, { TimersContextType, TimerType } from './TimersContext';
 
-class ButtonProgress extends Component {
+class ButtonProgress extends Component<{ context: TimersContextType }> {
   componentDidMount = () => {
     document.addEventListener('keyup', this.handleKeyPress);
   };
@@ -50,10 +50,6 @@ class ButtonProgress extends Component {
           height="140"
           width="140"
           timer={context.state.activeTimer.name}
-          progress={
-            context.state.activeTimer.timeRemaining /
-            context.state.activeTimer.duration
-          }
         >
           <circle
             strokeDashoffset={
@@ -98,7 +94,7 @@ const ResetButton = styled.div`
   }
 `;
 
-const StyledButtonProgress = styled.div`
+const StyledButtonProgress = styled.div<{ timer: TimerType }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +110,10 @@ const StyledButtonProgress = styled.div`
   }
 `;
 
-const ButtonProgressInner = styled.button`
+const ButtonProgressInner = styled.button<{
+  timer: TimerType;
+  paused: boolean;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,18 +127,17 @@ const ButtonProgressInner = styled.button`
   border-radius: 100%;
   font-size: 1em;
   & {
-    z-index: 10;
+    z-index: 1;
     ${(props) => props.paused && 'padding-left: 12px'}
   }
 `;
 
-const ProgressCircle = styled.svg`
+const ProgressCircle = styled.svg<{ timer: TimerType }>`
   position: absolute;
   left: 0;
   top: 0;
 
   & circle {
-    z-index: 9;
     stroke:  ${(props) => 'var(--light-' + props.timer});
     stroke-width: 14;
     fill: transparent;

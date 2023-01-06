@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import TimersContext from '../TimersContext';
+import TimersContext, { TimerType } from '../TimersContext';
 import { SettingsItem } from './Styles';
 import { FaVolumeUp } from 'react-icons/fa';
 
@@ -9,7 +9,7 @@ import { FaVolumeUp } from 'react-icons/fa';
 const SoundSetter = (props) => {
   const { timerName } = props;
   return (
-    <TimersContext>
+    <TimersContext.Consumer>
       {(context) => (
         <StyledSoundSetter>
           <Arrow
@@ -85,7 +85,7 @@ const SoundSetter = (props) => {
           </Progress>
         </StyledSoundSetter>
       )}
-    </TimersContext>
+    </TimersContext.Consumer>
   );
 };
 
@@ -105,7 +105,7 @@ const StyledSoundSetter = styled((props) => <SettingsItem {...props} />)`
   padding-bottom: 15px;
 `;
 
-const Arrow = styled.a`
+const Arrow = styled.a<{ timer: TimerType }>`
   font-size: 2rem;
   color: var(--darkgrey);
 
@@ -172,7 +172,7 @@ const Progress = styled.div`
   padding-bottom: 15px;
 `;
 
-const ProgressTab = styled.div`
+const ProgressTab = styled.div<{ active: boolean; timer: TimerType }>`
   background: var(--medgrey);
   height: 13px;
   width: 13px;
